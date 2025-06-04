@@ -132,16 +132,16 @@ export default function Navbar({
     setIsSavingKeys(true);
     try {
       // Import the agent service 
-      const { kagglerAgentService } = await import('../services/kagglerAgentService');
+      const { kaggieAgentService } = await import('../services/kaggieAgentService');
       
       // Use the agent service to save keys and trigger reinitialization
-      await kagglerAgentService.saveApiKeys(
+      await kaggieAgentService.saveApiKeys(
         openaiApiKey.trim(),
         tavilyApiKey.trim()
       );
       
       // Force agent reinitialization with new keys
-      await kagglerAgentService.initialize();
+      await kaggieAgentService.initialize();
       
       // Refresh the API keys hook state
       await refreshApiKeys();
@@ -195,7 +195,7 @@ export default function Navbar({
 
   const loadStarredCompetitions = () => {
     try {
-      const stored = localStorage.getItem('kaggler-starred-competitions')
+      const stored = localStorage.getItem('kaggie-starred-competitions')
       if (stored) {
         setStarredCompetitions(new Set(JSON.parse(stored)))
       }
@@ -226,7 +226,7 @@ export default function Navbar({
         
         // Save to localStorage
         try {
-          localStorage.setItem('kaggler-starred-competitions', JSON.stringify(Array.from(newSet)))
+          localStorage.setItem('kaggie-starred-competitions', JSON.stringify(Array.from(newSet)))
         } catch (error) {
           console.error('Failed to save starred competitions:', error)
         }
@@ -417,10 +417,10 @@ export default function Navbar({
           <div className="flex items-center space-x-2 justify-start">
             <img 
               src="/kaggie.png" 
-              alt="Kaggler Logo" 
+              alt="Kaggie Logo" 
               className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg object-contain"
             />
-            <h1 className="text-sm sm:text-adaptive-lg font-bold text-primary hidden xs:block">Kaggler</h1>
+            <h1 className="text-sm sm:text-adaptive-lg font-bold text-primary hidden xs:block">Kaggie</h1>
           </div>
 
           {/* Center: Competition Selector */}
@@ -870,7 +870,7 @@ export default function Navbar({
                       <div className="pt-4 border-t border-subtle">
                         <span className="text-secondary">Backend URL:</span>
                         <p className="text-primary font-medium text-xs bg-overlay px-2 py-1 rounded mt-1">
-                          https://kaggler-api.herokuapp.com
+                          https://kaggie-backend.onrender.com
                         </p>
                       </div>
                     </div>
@@ -912,8 +912,8 @@ export default function Navbar({
                   {/* About Section */}
                   <div className="bg-secondary/30 rounded-lg p-6 border border-subtle">
                     <h4 className="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
-                      <img src="/kaggie.png" alt="Kaggler" className="w-5 h-5 rounded" />
-                      About Kaggler
+                      <img src="/kaggie.png" alt="Kaggie" className="w-5 h-5 rounded" />
+                      About Kaggie
                     </h4>
                     <div className="space-y-3 text-sm">
                       <div className="grid grid-cols-2 gap-4">
@@ -927,12 +927,12 @@ export default function Navbar({
                         </div>
                       </div>
                       <p className="text-secondary">
-                        Kaggler is your intelligent assistant for Kaggle competitions. Get insights, ask questions, 
+                        Kaggie is your intelligent assistant for Kaggle competitions. Get insights, ask questions, 
                         and explore datasets with the power of AI.
                       </p>
                       <div className="flex gap-3 pt-2">
                         <a
-                          href="https://github.com/kaggler-ai/kaggler"
+                          href="https://github.com/arjein/kaggie"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-400 hover:text-blue-300 text-xs"
@@ -941,7 +941,7 @@ export default function Navbar({
                         </a>
                         <span className="text-subtle">•</span>
                         <a
-                          href="https://kaggler.ai/docs"
+                          href="https://github.com/arjein/kaggie#readme"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-400 hover:text-blue-300 text-xs"

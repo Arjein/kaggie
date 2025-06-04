@@ -1,5 +1,5 @@
 // Configuration and initialization helpers
-export interface KagglerAgentConfig {
+export interface KaggieAgentConfig {
   openaiApiKey: string;
   backendUrl?: string;
   enablePersistence?: boolean;
@@ -7,8 +7,8 @@ export interface KagglerAgentConfig {
   temperature?: number;
 }
 
-export const defaultConfig: Partial<KagglerAgentConfig> = {
-  backendUrl: 'https://kaggler-api.herokuapp.com',
+export const defaultConfig: Partial<KaggieAgentConfig> = {
+  backendUrl: 'https://kaggie-backend.onrender.com',
   enablePersistence: true,
   model: 'gpt-4o-mini',
   temperature: 0.1,

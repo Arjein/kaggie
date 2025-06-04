@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Kaggler",
+  "name": "Kaggie",
   "version": "0.0.1",
   "description": "AI-powered Kaggle competition assistant",
   
@@ -43,7 +43,7 @@
   },
   
   "action": {
-    "default_title": "Open Kaggler",
+    "default_title": "Open Kaggie",
     "default_icon": {
       "16": "kaggie-32.png",
       "32": "kaggie-48.png",

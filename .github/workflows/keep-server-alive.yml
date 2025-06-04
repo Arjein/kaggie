@@ -1,0 +1,70 @@
+name: Keep Render Server Alive
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # Every 5 minutes (we'll add randomness in the script)
+  workflow_dispatch:         # Allow manual trigger
+
+jobs:
+  ping-server:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Random Delay and Ping Backend
+        run: |
+          # Generate random delay between 0-8 minutes (5 base + 0-8 = 5-13 minutes total)
+          random_delay=$((RANDOM % 480 + 1))  # 0-480 seconds (0-8 minutes)
+          echo "🎲 Random delay: ${random_delay} seconds (~$((random_delay / 60)) minutes)"
+          echo "⏱️ Waiting before ping to add randomness..."
+          sleep $random_delay
+          
+      - name: Ping Backend Health Endpoint
+        run: |
+          echo "🏥 Pinging Kaggie backend health endpoint..."
+          
+          # Make request to health endpoint
+          response=$(curl -s -w "\n%{http_code}" "https://kaggie-backend.onrender.com/health")
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n -1)
+          
+          echo "📊 HTTP Status Code: $http_code"
+          echo "📄 Response Body: $body"
+          
+          # Check if request was successful
+          if [ "$http_code" -eq 200 ]; then
+            echo "✅ Server is alive and healthy!"
+          else
+            echo "❌ Server returned non-200 status code: $http_code"
+            echo "🔧 Attempting to wake up the server..."
+            
+            # Try root endpoint as fallback
+            fallback_response=$(curl -s -w "\n%{http_code}" "https://kaggie-backend.onrender.com/")
+            fallback_code=$(echo "$fallback_response" | tail -n1)
+            fallback_body=$(echo "$fallback_response" | head -n -1)
+            
+            echo "🔄 Fallback HTTP Status Code: $fallback_code"
+            echo "🔄 Fallback Response Body: $fallback_body"
+            
+            if [ "$fallback_code" -eq 200 ]; then
+              echo "✅ Server responded to root endpoint!"
+            else
+              echo "⚠️ Server may be down or starting up"
+              exit 1
+            fi
+          fi
+          
+      - name: Log Server Status
+        run: |
+          current_time=$(date)
+          next_base_run=$((5 * 60))  # 5 minutes base
+          next_random=$((RANDOM % 480 + 1))  # 0-8 minutes random
+          next_total=$((next_base_run + next_random))
+          next_minutes=$((next_total / 60))
+          
+          echo "🕐 Keep-alive ping completed at $current_time"
+          echo "🌐 Target: https://kaggie-backend.onrender.com/health"
+          echo "🎲 Randomized timing: 5 + 0-8 minutes = 5-13 minutes interval"
+          echo "⏰ Next scheduled run in ~${next_minutes} minutes (with randomness)"

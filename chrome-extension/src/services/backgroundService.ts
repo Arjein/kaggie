@@ -78,7 +78,7 @@ export class BackgroundService {
     });
 
     // Listen for custom events from content script (fixed TypeScript types)
-    window.addEventListener('kaggler-competition-detected', (event: Event) => {
+    window.addEventListener('kaggie-competition-detected', (event: Event) => {
       const customEvent = event as CustomEvent;
       const competition = customEvent.detail;
       console.log('BackgroundService: Competition detected from content script:', competition?.id);

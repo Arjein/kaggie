@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { kagglerAgentService } from '../services/kagglerAgentService';
+import { kaggieAgentService } from '../services/kaggieAgentService';
 import { globalConfig } from '../config/globalConfig';
 
 interface ApiKeysProps {
@@ -32,10 +32,10 @@ export function ApiKeysModal({ isOpen, onClose, onSave }: ApiKeysProps) {
   const handleSave = async () => {
     try {
       // Save the API keys using the agent service
-      await kagglerAgentService.saveApiKeys(openaiApiKey, tavilyApiKey, backendUrl);
+      await kaggieAgentService.saveApiKeys(openaiApiKey, tavilyApiKey, backendUrl);
       
       // Force agent reinitialization with new keys
-      await kagglerAgentService.initialize();
+      await kaggieAgentService.initialize();
       
       onSave();
       onClose();
@@ -87,7 +87,7 @@ export function ApiKeysModal({ isOpen, onClose, onSave }: ApiKeysProps) {
               type="url"
               value={backendUrl}
               onChange={(e) => setBackendUrl(e.target.value)}
-              placeholder="https://kaggler-api.herokuapp.com"
+              placeholder="https://kaggie-backend.onrender.com"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

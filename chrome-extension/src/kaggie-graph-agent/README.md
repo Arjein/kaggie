@@ -1,6 +1,6 @@
-# Kaggler Graph Agent - TypeScript Mirror
+# Kaggie Graph Agent - TypeScript Mirror
 
-This is an **EXACT** TypeScript/JavaScript implementation of the Python Kaggler Agent from `/backend/src`. Every component, function, and logic flow has been precisely replicated to maintain identical behavior.
+This is an **EXACT** TypeScript/JavaScript implementation of the Python Kaggie Agent from `/backend/src`. Every component, function, and logic flow has been precisely replicated to maintain identical behavior.
 
 ## Architecture Mirror
 
@@ -59,13 +59,13 @@ START → setup_node → call_llm → [conditional routing]
 ## Usage
 
 ```typescript
-import { KagglerAgent } from './kaggler-graph-agent';
+import { KaggieAgent } from './kaggie-graph-agent';
 import { HumanMessage } from '@langchain/core/messages';
 
 // Initialize agent (exact same as Python)
-const agent = new KagglerAgent(
+const agent = new KaggieAgent(
   process.env.OPENAI_API_KEY,
-  'https://kaggler-api.herokuapp.com'
+  'https://kaggie-backend.onrender.com'
 );
 
 // Create state (exact same structure as Python)
@@ -103,10 +103,10 @@ The only differences are platform-specific:
 ## Testing
 
 ```typescript
-import { testKagglerAgent, runningAgent } from './test';
+import { testKaggieAgent, runningAgent } from './test';
 
 // Run single test
-await testKagglerAgent();
+await testKaggieAgent();
 
 // Run interactive session with predefined queries
 await runningAgent('playground-series-s5e5');

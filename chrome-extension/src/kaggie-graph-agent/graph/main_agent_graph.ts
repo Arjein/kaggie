@@ -34,7 +34,7 @@ const AgentStateAnnotation = Annotation.Root({
   last_summarized_at: Annotation<number | null>(),
 });
 
-export class KagglerAgent {
+export class KaggieAgent {
   
   private graph: any;
   private llmService: LLMService;
@@ -42,7 +42,7 @@ export class KagglerAgent {
   private evalAgentGraph: EvalAgentGraph;
   private static memorySaver = persistentMemorySaver; // Static singleton to persist across invocations
 
-  constructor(apiKey: string, backendUrl: string = 'https://kaggler-api.herokuapp.com') {
+  constructor(apiKey: string, backendUrl: string = 'https://kaggie-backend.onrender.com') {
     this.llmService = new LLMService(apiKey);
     this.databaseService = new DatabaseService(backendUrl);
     this.evalAgentGraph = new EvalAgentGraph(this.llmService);
@@ -56,35 +56,35 @@ export class KagglerAgent {
     state: typeof AgentStateAnnotation.State, 
     config?: any
   ): Promise<typeof AgentStateAnnotation.State> {
-    console.log('🤖 KagglerAgent.invoke: Starting with input state:', {
+    console.log('🤖 KaggieAgent.invoke: Starting with input state:', {
       competition_id: state.competition_id,
       messages_count: state.messages?.length || 0,
       current_step: state.current_step,
       input_messages: state.messages?.map((m: any) => `${m.constructor?.name}: ${m.content?.substring(0, 50)}...`) || [],
       whole_state: state,
     });
-    console.log('🤖 KagglerAgent.invoke: Config:', config);
+    console.log('🤖 KaggieAgent.invoke: Config:', config);
     
     // Add debug info about memory saver
     const thread_id = config?.configurable?.thread_id;
-    console.log('🧠 KagglerAgent.invoke: Using thread_id for memory:', thread_id);
-    console.log('🧠 KagglerAgent.invoke: MemorySaver should restore previous conversation for this thread_id');
+    console.log('🧠 KaggieAgent.invoke: Using thread_id for memory:', thread_id);
+    console.log('🧠 KaggieAgent.invoke: MemorySaver should restore previous conversation for this thread_id');
     
     // Debug: Check if MemorySaver has any stored data for this thread
     try {
-      const checkpointTuple = await KagglerAgent.memorySaver.getTuple(config);
-      console.log('🧠 KagglerAgent.invoke: MemorySaver checkpoint for thread:', {
+      const checkpointTuple = await KaggieAgent.memorySaver.getTuple(config);
+      console.log('🧠 KaggieAgent.invoke: MemorySaver checkpoint for thread:', {
         thread_id,
         hasCheckpoint: !!checkpointTuple,
         checkpointData: checkpointTuple?.checkpoint ? Object.keys(checkpointTuple.checkpoint.channel_values || {}) : 'no checkpoint'
       });
     } catch (error) {
-      console.log('🧠 KagglerAgent.invoke: MemorySaver getTuple failed:', error);
+      console.log('🧠 KaggieAgent.invoke: MemorySaver getTuple failed:', error);
     }
     
     const stateUpdated = await this.graph.invoke(state, config);
     
-    console.log('🤖 KagglerAgent.invoke: Completed with updated state:', {
+    console.log('🤖 KaggieAgent.invoke: Completed with updated state:', {
       competition_id: stateUpdated.competition_id,
       messages_count: stateUpdated.messages?.length || 0,
       current_step: stateUpdated.current_step,
@@ -178,8 +178,8 @@ export class KagglerAgent {
       // ✅ FIX: Summarization always goes to END (exact same as Python)
       .addEdge("summarize_conversation", "__end__");
 
-    console.log('🧠 KagglerAgent._buildGraph: Using static MemorySaver instance for persistent memory:', KagglerAgent.memorySaver);
-    const compiledGraph = graph.compile({ checkpointer: KagglerAgent.memorySaver });
+    console.log('🧠 KaggieAgent._buildGraph: Using static MemorySaver instance for persistent memory:', KaggieAgent.memorySaver);
+    const compiledGraph = graph.compile({ checkpointer: KaggieAgent.memorySaver });
     return compiledGraph;
   }
 
@@ -187,7 +187,7 @@ export class KagglerAgent {
    * Get the memory saver instance
    */
   getMemorySaver() {
-    return KagglerAgent.memorySaver;
+    return KaggieAgent.memorySaver;
   }
 
   /**

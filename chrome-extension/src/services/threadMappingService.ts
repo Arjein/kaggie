@@ -9,7 +9,7 @@ interface ThreadMapping {
 
 class ThreadMappingService {
   private static instance: ThreadMappingService;
-  private readonly STORAGE_KEY = 'kaggler_thread_mappings';
+  private readonly STORAGE_KEY = 'kaggie_thread_mappings';
   private mappings: ThreadMapping = {};
   private initialized = false;
 

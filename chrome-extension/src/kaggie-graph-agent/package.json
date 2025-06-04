@@ -1,7 +1,7 @@
 {
-  "name": "kaggler-graph-agent",
+  "name": "kaggie-graph-agent",
   "version": "1.0.0",
-  "description": "Exact TypeScript mirror of the Python Kaggler Agent with LangGraph architecture",
+  "description": "Exact TypeScript mirror of the Python Kaggie Agent with LangGraph architecture",
   "main": "index.ts",
   "type": "module",
   "dependencies": {
@@ -18,6 +18,6 @@
     "typescript",
     "mirror"
   ],
-  "author": "Kaggler Team",
+  "author": "Kaggie Team",
   "license": "MIT"
 }

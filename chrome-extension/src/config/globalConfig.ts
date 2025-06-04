@@ -1,5 +1,5 @@
 /**
- * Global Configuration Service for Kaggler Chrome Extension
+ * Global Configuration Service for Kaggie Chrome Extension
  * 
  * This service provides centralized configuration management with Chrome storage integration.
  * It ensures that configuration values like backend URL are consistent across all components.
@@ -28,7 +28,7 @@ class GlobalConfigService {
 
   // Default configuration values
   private readonly defaultConfig: GlobalConfig = {
-    backendUrl: 'https://kaggler-backend.onrender.com', // Backend successfully deployed on Render.com
+    backendUrl: 'https://kaggie-backend.onrender.com', // Backend successfully deployed on Render.com
     model: 'gpt-4o-mini',
     temperature: 0.3,
     openaiApiKey: '',

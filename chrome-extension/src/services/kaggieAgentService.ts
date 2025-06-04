@@ -1,6 +1,6 @@
-// Integration service for Enhanced Kaggler agent in Chrome extension
+// Integration service for Enhanced Kaggie agent in Chrome extension
 import { HumanMessage, AIMessage } from "@langchain/core/messages";
-import { KagglerAgent } from '../kaggler-graph-agent/graph/main_agent_graph';
+import { KaggieAgent } from '../kaggie-graph-agent/graph/main_agent_graph';
 import { globalConfig, type GlobalConfig } from '../config/globalConfig';
 import { storageService } from './storageService';
 import type { Message } from '../types/message';
@@ -102,17 +102,17 @@ function extractMessageContent(message: unknown): string {
   return String(msg.content);
 }
 
-export class KagglerAgentService {
-  private agent: KagglerAgent | null = null;
+export class KaggieAgentService {
+  private agent: KaggieAgent | null = null;
   private isInitialized = false;
 
   private constructor() {}
-  private static instance: KagglerAgentService;
-  public static getInstance(): KagglerAgentService {
-    if (!KagglerAgentService.instance) {
-      KagglerAgentService.instance = new KagglerAgentService();
+  private static instance: KaggieAgentService;
+  public static getInstance(): KaggieAgentService {
+    if (!KaggieAgentService.instance) {
+      KaggieAgentService.instance = new KaggieAgentService();
     }
-    return KagglerAgentService.instance;
+    return KaggieAgentService.instance;
   }
 
   /**
@@ -124,7 +124,7 @@ export class KagglerAgentService {
     const compId = competitionId || 'general';
     const threadId = `thread_${email}_${compId}`;
     
-    console.log('KagglerAgentService: Generated thread ID:', threadId);
+    console.log('KaggieAgentService: Generated thread ID:', threadId);
     return threadId;
   }
 
@@ -134,20 +134,20 @@ export class KagglerAgentService {
   private async updateThreadId(competitionId?: string): Promise<string> {
     const newThreadId = this.generateThreadId(competitionId);
     await globalConfig.updateConfig({ currentThreadId: newThreadId });
-    console.log('KagglerAgentService: Updated thread ID in global config:', newThreadId);
+    console.log('KaggieAgentService: Updated thread ID in global config:', newThreadId);
     return newThreadId;
   }
 
   /**
-   * Initialize the new graph-based Kaggler agent with API keys from global configuration
+   * Initialize the new graph-based Kaggie agent with API keys from global configuration
    */
   async initialize(): Promise<boolean> {
     try {
-      console.log('KagglerAgentService: Starting enhanced agent initialization...');
+      console.log('KaggieAgentService: Starting enhanced agent initialization...');
       
       // Get configuration from global config service
       const config = await this.getConfigFromStorage();
-      console.log('KagglerAgentService: Config loaded:', {
+      console.log('KaggieAgentService: Config loaded:', {
         hasOpenAI: !!config.openaiApiKey,
         hasTavily: !!config.tavilyApiKey,
         backendUrl: config.backendUrl,
@@ -155,40 +155,40 @@ export class KagglerAgentService {
       });
       
       if (!config.openaiApiKey || !config.tavilyApiKey) {
-        console.warn('KagglerAgentService: Missing required API keys in storage');
+        console.warn('KaggieAgentService: Missing required API keys in storage');
         this.isInitialized = false;
         return false;
       }
 
       // Instantiate the new graph-based agent
-      console.log('KagglerAgentService: Creating new agent instance with updated keys...');
-      this.agent = new KagglerAgent(config.openaiApiKey, config.backendUrl);
+      console.log('KaggieAgentService: Creating new agent instance with updated keys...');
+      this.agent = new KaggieAgent(config.openaiApiKey, config.backendUrl);
       this.isInitialized = true;
       
-      console.log('KagglerAgentService: Enhanced agent initialization complete with new keys!');
+      console.log('KaggieAgentService: Enhanced agent initialization complete with new keys!');
       return true;
     } catch (error) {
-      console.error('KagglerAgentService: Failed to initialize graph agent:', error);
+      console.error('KaggieAgentService: Failed to initialize graph agent:', error);
       this.isInitialized = false;
       return false;
     }
   }
 
   /**
-   * Process a query using the new graph-based Kaggler agent
+   * Process a query using the new graph-based Kaggie agent
    */
   async processQuery(query: string, competitionId?: string, threadId?: string): Promise<AgentResponse> {
-    console.log('🚀 KagglerAgentService.processQuery: Starting with query:', query);
-    console.log('🚀 KagglerAgentService.processQuery: Competition ID:', competitionId);
+    console.log('🚀 KaggieAgentService.processQuery: Starting with query:', query);
+    console.log('🚀 KaggieAgentService.processQuery: Competition ID:', competitionId);
     
     if (!this.isInitialized || !this.agent) {
-      console.log('🔧 KagglerAgentService.processQuery: Agent not initialized, initializing...');
+      console.log('🔧 KaggieAgentService.processQuery: Agent not initialized, initializing...');
       const initialized = await this.initialize();
       if (!initialized || !this.agent) {
-        console.error('❌ KagglerAgentService.processQuery: Failed to initialize agent');
-        throw new Error('Failed to initialize Kaggler agent. Please check your API keys.');
+        console.error('❌ KaggieAgentService.processQuery: Failed to initialize agent');
+        throw new Error('Failed to initialize Kaggie agent. Please check your API keys.');
       }
-      console.log('✅ KagglerAgentService.processQuery: Agent initialized successfully');
+      console.log('✅ KaggieAgentService.processQuery: Agent initialized successfully');
     }
     
     // Generate/update thread ID based on competition
@@ -201,7 +201,7 @@ export class KagglerAgentService {
       effectiveThreadId = await this.updateThreadId(competitionId);
     }
     
-    console.log('🧵 KagglerAgentService.processQuery: Using thread ID:', effectiveThreadId);
+    console.log('🧵 KaggieAgentService.processQuery: Using thread ID:', effectiveThreadId);
     
     // 🔧 Use minimal state that matches AgentStateAnnotation exactly
     const state = {
@@ -220,14 +220,14 @@ export class KagglerAgentService {
       last_summarized_at: null,
     };
     
-    console.log('📊 KagglerAgentService.processQuery: Initial state (minimal):', {
+    console.log('📊 KaggieAgentService.processQuery: Initial state (minimal):', {
       competition_id: state.competition_id,
       new_message: query,
       thread_id: effectiveThreadId
     });
     
     // Call the graph agent's invoke method with thread_id for memory
-    console.log('🧠 KagglerAgentService.processQuery: Calling agent.invoke with config:', { 
+    console.log('🧠 KaggieAgentService.processQuery: Calling agent.invoke with config:', { 
       configurable: { thread_id: effectiveThreadId } 
     });
     
@@ -238,16 +238,16 @@ export class KagglerAgentService {
         const graph = this.agent.getGraph();
         const config = { configurable: { thread_id: effectiveThreadId } };
         
-        console.log('🔄 KagglerAgentService.processQuery: Attempting to restore saved state for competition:', competitionId);
+        console.log('🔄 KaggieAgentService.processQuery: Attempting to restore saved state for competition:', competitionId);
         const restored = await memorySaver.restoreStateForThread(competitionId, effectiveThreadId, graph, config);
         
         if (restored) {
-          console.log('✅ KagglerAgentService.processQuery: Successfully restored saved state for competition:', competitionId);
+          console.log('✅ KaggieAgentService.processQuery: Successfully restored saved state for competition:', competitionId);
         } else {
-          console.log('🆕 KagglerAgentService.processQuery: No previous state found, starting fresh for competition:', competitionId);
+          console.log('🆕 KaggieAgentService.processQuery: No previous state found, starting fresh for competition:', competitionId);
         }
       } catch (error) {
-        console.warn('⚠️ KagglerAgentService.processQuery: Failed to restore state, continuing with fresh state:', error);
+        console.warn('⚠️ KaggieAgentService.processQuery: Failed to restore state, continuing with fresh state:', error);
       }
     }
     
@@ -263,12 +263,12 @@ export class KagglerAgentService {
         const graph = this.agent.getGraph();
         const config = { configurable: { thread_id: effectiveThreadId } };
         
-        console.log('💾 KagglerAgentService.processQuery: Getting final state snapshot for competition:', competitionId);
+        console.log('💾 KaggieAgentService.processQuery: Getting final state snapshot for competition:', competitionId);
         const finalStateSnapshot = await graph.getState(config);
         
         if (finalStateSnapshot) {
           await memorySaver.saveStateSnapshot(competitionId, effectiveThreadId, finalStateSnapshot);
-          console.log('✅ KagglerAgentService.processQuery: Successfully saved state snapshot for competition:', competitionId);
+          console.log('✅ KaggieAgentService.processQuery: Successfully saved state snapshot for competition:', competitionId);
           
           // 💬 SAVE CONVERSATIONS IMMEDIATELY - Same timing as snapshots
           // Extract messages from the final state and save to conversations
@@ -286,16 +286,16 @@ export class KagglerAgentService {
                 this.getUserEmail()
               );
               
-              console.log(`💬 KagglerAgentService.processQuery: Successfully saved ${conversationMessages.length} conversation messages for thread ${effectiveThreadId}`);
+              console.log(`💬 KaggieAgentService.processQuery: Successfully saved ${conversationMessages.length} conversation messages for thread ${effectiveThreadId}`);
             } catch (conversationError) {
-              console.error('❌ KagglerAgentService.processQuery: Failed to save conversation messages:', conversationError);
+              console.error('❌ KaggieAgentService.processQuery: Failed to save conversation messages:', conversationError);
             }
           }
         } else {
-          console.warn('⚠️ KagglerAgentService.processQuery: No final state snapshot to save');
+          console.warn('⚠️ KaggieAgentService.processQuery: No final state snapshot to save');
         }
       } catch (error) {
-        console.error('❌ KagglerAgentService.processQuery: Failed to save state snapshot:', error);
+        console.error('❌ KaggieAgentService.processQuery: Failed to save state snapshot:', error);
         // Don't throw - this shouldn't break the response flow
       }
     }
@@ -307,7 +307,7 @@ export class KagglerAgentService {
   }
 
   /**
-   * Process a query using the Kaggler agent with streaming callbacks
+   * Process a query using the Kaggie agent with streaming callbacks
    */
   async sendMessage(
     text: string,
@@ -319,9 +319,9 @@ export class KagglerAgentService {
     onError: (error: string) => void
   ): Promise<void> {
     try {
-      console.log('📨 KagglerAgentService.sendMessage: Starting with text:', text);
-      console.log('📨 KagglerAgentService.sendMessage: Competition:', selectedCompetition);
-      console.log('📨 KagglerAgentService.sendMessage: Using provided thread ID:', threadId);
+      console.log('📨 KaggieAgentService.sendMessage: Starting with text:', text);
+      console.log('📨 KaggieAgentService.sendMessage: Competition:', selectedCompetition);
+      console.log('📨 KaggieAgentService.sendMessage: Using provided thread ID:', threadId);
       
       // Use the provided thread ID instead of generating a new one
       const competitionThreadId = threadId;
@@ -333,14 +333,14 @@ export class KagglerAgentService {
         competitionThreadId, // Use the competition-based thread ID
       );
       
-      console.log('📨 KagglerAgentService.sendMessage: Got response from processQuery:', response);
+      console.log('📨 KaggieAgentService.sendMessage: Got response from processQuery:', response);
       
       onStatusUpdate('Generating response...');
       
       // Extract content from the last message in the messages array
       let content = '';
       
-      console.log('📨 KagglerAgentService.sendMessage: Response structure:', {
+      console.log('📨 KaggieAgentService.sendMessage: Response structure:', {
         response_keys: Object.keys(response || {}),
         has_messages: !!response?.messages,
         messages_count: response?.messages?.length || 0,
@@ -356,7 +356,7 @@ export class KagglerAgentService {
             ? messageContent.substring(0, 100) + '...' 
             : messageContent;
           
-          console.log('📨 KagglerAgentService.sendMessage: Checking message:', {
+          console.log('📨 KaggieAgentService.sendMessage: Checking message:', {
             index: i,
             type: message?.constructor?.name,
             content_preview: contentPreview,
@@ -367,7 +367,7 @@ export class KagglerAgentService {
           // Use robust AI message detection
           if (isAIMessage(message)) {
             content = extractMessageContent(message);
-            console.log('✅ KagglerAgentService.sendMessage: Found AI message content:', {
+            console.log('✅ KaggieAgentService.sendMessage: Found AI message content:', {
               content_length: content.length,
               content_preview: content.length > 200 ? content.substring(0, 200) + '...' : content,
               thread_id: competitionThreadId
@@ -378,7 +378,7 @@ export class KagglerAgentService {
       }
       
       if (!content) {
-        console.warn('⚠️ KagglerAgentService.sendMessage: No AI message content found!');
+        console.warn('⚠️ KaggieAgentService.sendMessage: No AI message content found!');
         onError('No response content received from agent');
         return;
       }
@@ -388,18 +388,18 @@ export class KagglerAgentService {
       const streamChunks = () => {
         if (currentIndex < content.length) {
           const chunk = content.slice(0, currentIndex + chunkSize);
-          //console.log('📨 KagglerAgentService.sendMessage: Streaming chunk:', chunk.length, 'chars');
+          //console.log('📨 KaggieAgentService.sendMessage: Streaming chunk:', chunk.length, 'chars');
           onContentUpdate(chunk);
           currentIndex += chunkSize;
           setTimeout(streamChunks, 50);
         } else {
-          console.log('✅ KagglerAgentService.sendMessage: Streaming complete for thread:', competitionThreadId);
+          console.log('✅ KaggieAgentService.sendMessage: Streaming complete for thread:', competitionThreadId);
           onComplete();
         }
       };
       streamChunks();
     } catch (error) {
-      console.error('❌ KagglerAgentService.sendMessage: Error occurred:', error);
+      console.error('❌ KaggieAgentService.sendMessage: Error occurred:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       onError(errorMessage);
     }
@@ -427,12 +427,12 @@ export class KagglerAgentService {
   private async getConfigFromStorage(): Promise<GlobalConfig> {
     // Ensure global config is initialized
     if (!globalConfig.isInitialized()) {
-      console.log('KagglerAgentService: Global config not initialized, initializing...');
+      console.log('KaggieAgentService: Global config not initialized, initializing...');
       await globalConfig.initialize();
     }
 
     const config = globalConfig.getConfig();
-    console.log('KagglerAgentService: Using global configuration:', {
+    console.log('KaggieAgentService: Using global configuration:', {
       hasOpenAI: !!config.openaiApiKey,
       backendUrl: config.backendUrl,
       model: config.model
@@ -444,7 +444,7 @@ export class KagglerAgentService {
    * Save API keys to storage using global config
    */
   async saveApiKeys(openaiApiKey: string, tavilyApiKey: string, backendUrl?: string): Promise<void> {
-    console.log('KagglerAgentService: Saving API keys and triggering reinitialization...');
+    console.log('KaggieAgentService: Saving API keys and triggering reinitialization...');
     
     const updates: Partial<GlobalConfig> = { openaiApiKey, tavilyApiKey };
     
@@ -458,7 +458,7 @@ export class KagglerAgentService {
     this.isInitialized = false;
     this.agent = null;
     
-    console.log('KagglerAgentService: API keys saved, agent marked for reinitialization');
+    console.log('KaggieAgentService: API keys saved, agent marked for reinitialization');
   }
 
   /**
@@ -500,4 +500,4 @@ export class KagglerAgentService {
 }
 
 // Export singleton instance
-export const kagglerAgentService = KagglerAgentService.getInstance();
+export const kaggieAgentService = KaggieAgentService.getInstance();

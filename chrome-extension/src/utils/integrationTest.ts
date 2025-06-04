@@ -1,23 +1,23 @@
-// Integration test for the complete Kaggler Chrome extension
-import { KagglerAgentService } from '../services/kagglerAgentService';
+// Integration test for the complete Kaggie Chrome extension
+import { KaggieAgentService } from '../services/kaggieAgentService';
 import { type Competition } from '../types/competition';
 import { globalConfig } from '../config/globalConfig';
 
 declare global {
   interface Window {
-    KagglerIntegrationTest: typeof IntegrationTest;
+    KaggieIntegrationTest: typeof IntegrationTest;
   }
 }
 
 export class IntegrationTest {
-  private agentService: KagglerAgentService;
+  private agentService: KaggieAgentService;
 
   constructor() {
-    this.agentService = KagglerAgentService.getInstance();
+    this.agentService = KaggieAgentService.getInstance();
   }
 
   async runCompleteTest(): Promise<boolean> {
-    console.log('🚀 Starting Kaggler Extension Integration Test');
+    console.log('🚀 Starting Kaggie Extension Integration Test');
 
     try {
       // Test 1: Chrome storage check
@@ -181,5 +181,5 @@ export class IntegrationTest {
 
 // Export for global access in extension console
 if (typeof window !== 'undefined') {
-  (window as Window).KagglerIntegrationTest = IntegrationTest;
+  (window as Window).KaggieIntegrationTest = IntegrationTest;
 }

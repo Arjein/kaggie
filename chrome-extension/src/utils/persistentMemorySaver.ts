@@ -16,7 +16,7 @@ interface CompetitionStateSnapshot {
  * Each competition gets its own snapshot that is updated when the agent state changes
  */
 export class PersistentMemorySaver extends MemorySaver {
-  private readonly storageKey = 'kaggler_competition_snapshots';
+  private readonly storageKey = 'kaggie_competition_snapshots';
   private initialized = false;
   private competitionSnapshots: Map<string, CompetitionStateSnapshot> = new Map();
 

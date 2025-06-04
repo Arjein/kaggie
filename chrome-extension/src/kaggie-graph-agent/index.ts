@@ -1,5 +1,5 @@
 // Exact mirror of backend/src/main.py functionality
-export { KagglerAgent } from './graph/main_agent_graph';
+export { KaggieAgent } from './graph/main_agent_graph';
 export type { AgentState, EvalAgentState } from './models/state';
 export type { RetrievalEvaluation } from './models/schemas';
 

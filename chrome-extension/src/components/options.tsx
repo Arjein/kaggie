@@ -30,7 +30,7 @@ export default function OptionsPage() {
     }
 
     if (!tavilyKey.trim()) {
-      alert('Tavily API key is required for the enhanced Kaggler agent');
+      alert('Tavily API key is required for the enhanced Kaggie agent');
       return;
     }
 
@@ -38,17 +38,17 @@ export default function OptionsPage() {
     
     try {
       // Import the agent service 
-      const { kagglerAgentService } = await import('../services/kagglerAgentService');
+      const { kaggieAgentService } = await import('../services/kaggieAgentService');
       
       // Use the agent service to save keys and trigger reinitialization
-      await kagglerAgentService.saveApiKeys(
+      await kaggieAgentService.saveApiKeys(
         openaiKey.trim(),
         tavilyKey.trim(),
         backendUrl.trim()
       );
       
       // Force agent reinitialization with new keys
-      await kagglerAgentService.initialize();
+      await kaggieAgentService.initialize();
       
       setTimeout(() => {
         setIsLoading(false);
@@ -81,7 +81,7 @@ export default function OptionsPage() {
               </svg>
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-gray-900">Kaggler Settings</h1>
+              <h1 className="text-lg font-semibold text-gray-900">Kaggie Settings</h1>
               <p className="text-sm text-gray-500">Configure your API keys</p>
             </div>
           </div>
@@ -176,11 +176,11 @@ export default function OptionsPage() {
                 id="backendUrl" 
                 value={backendUrl}
                 onChange={(e) => setBackendUrl(e.target.value)}
-                placeholder="https://kaggler-api.herokuapp.com" 
+                placeholder="https://kaggie-backend.onrender.com" 
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
               />
               <p className="text-xs text-gray-500 mt-2">
-                🔗 URL for the Kaggler backend service (for RAG search and competition data)
+                🔗 URL for the Kaggie backend service (for RAG search and competition data)
               </p>
             </div>
 

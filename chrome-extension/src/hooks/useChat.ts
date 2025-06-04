@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { type Message } from "../types/message";
 import { type Competition } from "../types/competition";
-import { kagglerAgentService } from "../services/kagglerAgentService";
+import { kaggieAgentService } from "../services/kaggieAgentService";
 import { BackgroundService } from "../services/backgroundService";
 import {
   createUserMessage,
@@ -318,7 +318,7 @@ export function useChat() {
     setMessages(prevMessages => [...prevMessages, placeholderSystemMessage]);
     
     try {
-      await kagglerAgentService.sendMessage(
+      await kaggieAgentService.sendMessage(
         text,
         selectedCompetition,
         currentThreadId,
