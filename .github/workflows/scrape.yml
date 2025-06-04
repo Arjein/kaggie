@@ -1,0 +1,54 @@
+name: Run Kaggle Scraper every 4 hours
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # Every 4 hours
+  workflow_dispatch:       # Allow manual trigger
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: prod  # Checkout the prod branch
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scraper/requirements.txt
+          playwright install chromium
+
+      - name: Download spaCy model
+        run: python -m spacy download en_core_web_sm
+          
+      - name: Set up environment variables
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+          
+          echo "Decoding GOOGLE_APPLICATION_CREDENTIALS_JSON secret..."
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}" | base64 --decode > serviceAccount.json
+          
+          echo "Validating decoded serviceAccount.json with jq:"
+          if ! jq empty serviceAccount.json; then
+            echo "Invalid JSON in decoded serviceAccount.json."
+            echo "--- Content of serviceAccount.json that failed jq ---"
+            cat serviceAccount.json # Print the problematic content
+            echo "--- End of serviceAccount.json content ---"
+            exit 1
+          else
+            echo "serviceAccount.json is valid JSON according to jq."
+          fi
+      - name: Run scraper with Pinecone sync
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: serviceAccount.json
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python scraper/src/scraper.py

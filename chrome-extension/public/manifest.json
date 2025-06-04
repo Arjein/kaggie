@@ -1,0 +1,61 @@
+{
+  "manifest_version": 3,
+  "name": "Kaggler",
+  "version": "0.0.1",
+  "description": "AI-powered Kaggle competition assistant",
+  
+  "permissions": [
+    "storage",
+    "activeTab",
+    "contextMenus",
+    "sidePanel",
+    "tabs"
+  ],
+  
+  "host_permissions": [
+    "https://www.kaggle.com/*",
+    "https://*.kaggle.com/*",
+    "https://api.openai.com/*",
+    "https://*.openai.com/*",
+    "https://api.tavily.com/*",
+    "https://*.tavily.com/*"
+  ],
+  
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  
+  "side_panel": {
+    "default_path": "index.html"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["https://www.kaggle.com/*", "https://*.kaggle.com/*"],
+      "js": ["content-script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  
+  "action": {
+    "default_title": "Open Kaggler",
+    "default_icon": {
+      "16": "kaggie-32.png",
+      "32": "kaggie-48.png",
+      "48": "kaggie-64.png",
+      "96": "kaggie-96.png",
+      "128": "kaggie-128.png"
+    }
+  },
+  
+  "icons": {    
+    "32": "kaggie-32.png",
+    "48": "kaggie-48.png",
+    "128": "kaggie-128.png"
+  }
+}

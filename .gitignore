@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+
+credentials/serviceAccount.json
+# Environment variables and secrets
+.env*
+*.env
+.venv
+.venv/
+.venv*
+*.venv
+**/.env*
+**/secrets.*
+**/config/keys.*
+**/*API_KEY*
+**/*SECRET*
+**/DEPLOYMENT_STATUS.*
+**/*deployment*
+*.log
+*.key
+*.pem
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+coverage/
+__pycache__
+# Chrome extension specific
+chrome-extension/.env*
+chrome-extension/secrets.*
+chrome-extension/dist/
+chrome-extension/build/
+
+# IDE and OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock

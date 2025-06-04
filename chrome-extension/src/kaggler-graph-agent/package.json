@@ -1,0 +1,23 @@
+{
+  "name": "kaggler-graph-agent",
+  "version": "1.0.0",
+  "description": "Exact TypeScript mirror of the Python Kaggler Agent with LangGraph architecture",
+  "main": "index.ts",
+  "type": "module",
+  "dependencies": {
+    "@langchain/core": "^0.3.27",
+    "@langchain/openai": "^0.3.20",
+    "@langchain/langgraph": "^0.2.73",
+    "zod": "^3.23.8"
+  },
+  "keywords": [
+    "kaggle",
+    "agent",
+    "langchain",
+    "langgraph",
+    "typescript",
+    "mirror"
+  ],
+  "author": "Kaggler Team",
+  "license": "MIT"
+}
