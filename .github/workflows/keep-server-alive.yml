@@ -26,7 +26,7 @@ jobs:
           echo "🏥 Pinging Kaggie backend health endpoint..."
           
           # Make request to health endpoint
-          response=$(curl -s -w "\n%{http_code}" "https://kaggie-backend.onrender.com/health")
+          response=$(curl -s -w "\n%{http_code}" "https://kaggie-api.onrender.com/health")
           http_code=$(echo "$response" | tail -n1)
           body=$(echo "$response" | head -n -1)
           
