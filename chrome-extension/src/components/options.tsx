@@ -176,7 +176,7 @@ export default function OptionsPage() {
                 id="backendUrl" 
                 value={backendUrl}
                 onChange={(e) => setBackendUrl(e.target.value)}
-                placeholder="https://kaggie-backend.onrender.com" 
+                placeholder="https://kaggie-api.onrender.com" 
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
               />
               <p className="text-xs text-gray-500 mt-2">

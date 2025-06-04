@@ -87,7 +87,7 @@ export function ApiKeysModal({ isOpen, onClose, onSave }: ApiKeysProps) {
               type="url"
               value={backendUrl}
               onChange={(e) => setBackendUrl(e.target.value)}
-              placeholder="https://kaggie-backend.onrender.com"
+              placeholder="https://kaggie-api.onrender.com"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>

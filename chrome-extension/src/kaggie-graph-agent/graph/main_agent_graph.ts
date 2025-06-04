@@ -42,7 +42,7 @@ export class KaggieAgent {
   private evalAgentGraph: EvalAgentGraph;
   private static memorySaver = persistentMemorySaver; // Static singleton to persist across invocations
 
-  constructor(apiKey: string, backendUrl: string = 'https://kaggie-backend.onrender.com') {
+  constructor(apiKey: string, backendUrl: string = 'https://kaggie-api.onrender.com') {
     this.llmService = new LLMService(apiKey);
     this.databaseService = new DatabaseService(backendUrl);
     this.evalAgentGraph = new EvalAgentGraph(this.llmService);

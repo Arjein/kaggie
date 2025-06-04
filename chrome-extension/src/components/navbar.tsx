@@ -870,7 +870,7 @@ export default function Navbar({
                       <div className="pt-4 border-t border-subtle">
                         <span className="text-secondary">Backend URL:</span>
                         <p className="text-primary font-medium text-xs bg-overlay px-2 py-1 rounded mt-1">
-                          https://kaggie-backend.onrender.com
+                          https://kaggie-api.onrender.com
                         </p>
                       </div>
                     </div>

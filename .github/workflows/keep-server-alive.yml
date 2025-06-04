@@ -41,7 +41,7 @@ jobs:
             echo "🔧 Attempting to wake up the server..."
             
             # Try root endpoint as fallback
-            fallback_response=$(curl -s -w "\n%{http_code}" "https://kaggie-backend.onrender.com/")
+            fallback_response=$(curl -s -w "\n%{http_code}" "https://kaggie-api.onrender.com/")
             fallback_code=$(echo "$fallback_response" | tail -n1)
             fallback_body=$(echo "$fallback_response" | head -n -1)
             
@@ -65,6 +65,6 @@ jobs:
           next_minutes=$((next_total / 60))
           
           echo "🕐 Keep-alive ping completed at $current_time"
-          echo "🌐 Target: https://kaggie-backend.onrender.com/health"
+          echo "🌐 Target: https://kaggie-api.onrender.com/health"
           echo "🎲 Randomized timing: 5 + 0-8 minutes = 5-13 minutes interval"
           echo "⏰ Next scheduled run in ~${next_minutes} minutes (with randomness)"

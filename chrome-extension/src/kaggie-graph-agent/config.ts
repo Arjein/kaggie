@@ -8,7 +8,7 @@ export interface KaggieAgentConfig {
 }
 
 export const defaultConfig: Partial<KaggieAgentConfig> = {
-  backendUrl: 'https://kaggie-backend.onrender.com',
+  backendUrl: 'https://kaggie-api.onrender.com',
   enablePersistence: true,
   model: 'gpt-4o-mini',
   temperature: 0.1,
