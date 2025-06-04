@@ -1,7 +1,7 @@
-# Render.com deployment configuration for Kaggler monorepo
+# Render.com deployment configuration for kaggie monorepo
 services:
   - type: web
-    name: kaggler-backend
+    name: kaggie-api
     runtime: python
     # Build commands for monorepo - navigate to backend directory
     buildCommand: |
@@ -19,7 +19,7 @@ services:
       - key: PORT
         fromService:
           type: web
-          name: kaggler-backend
+          name: kaggie-api
           property: port
       # Add your secrets in Render dashboard (not here for security)
       - key: PINECONE_API_KEY
