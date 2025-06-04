@@ -47,6 +47,4 @@ jobs:
       - name: Run scraper with Pinecone sync
         env:
           GOOGLE_APPLICATION_CREDENTIALS: serviceAccount.json
-          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python scraper/src/scraper.py
