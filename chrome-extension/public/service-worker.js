@@ -29,10 +29,10 @@ function detectCompetitionFromURL(url) {
   return null;
 }
 
-// Initialize side panel behavior
+// Initialize side panel behavior - Enable on all tabs
 chrome.sidePanel
     .setPanelBehavior({ openPanelOnActionClick: true })
-    .then(() => console.log('Service Worker: Side panel behavior set'))
+    .then(() => console.log('Service Worker: Side panel behavior set for all tabs'))
     .catch((error) => console.error('Service Worker: Side panel setup error:', error));
 
 // Store current competition
@@ -92,7 +92,7 @@ async function notifyCompetitionChange(competition, tabId) {
   }
 }
 
-// Listen for tab updates (URL changes) - FOR NOTIFICATIONS ONLY
+// Listen for tab updates (URL changes) - FOR COMPETITION DETECTION ONLY
 chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
   // Only process when the page is loaded or the URL changes
   if (info.status !== 'complete' && !info.url) {
@@ -115,16 +115,9 @@ chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
   try {
     const url = new URL(tab.url);
     
-    // Handle Kaggle.com pages
+    // Check for Kaggle competition detection (but don't restrict side panel)
     if (url.origin === KAGGLE_ORIGIN) {
-      console.log('Service Worker: On Kaggle.com, enabling side panel');
-      
-      // Enable side panel on Kaggle.com
-      await chrome.sidePanel.setOptions({
-        tabId,
-        path: "index.html",
-        enabled: true
-      });
+      console.log('Service Worker: On Kaggle.com, checking for competition');
       
       // Check for competition for NOTIFICATIONS ONLY (not auto-switching)
       console.log('Service Worker: Checking for competition in URL (notifications only):', tab.url);
@@ -139,14 +132,9 @@ chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
       }
       
     } else {
-      console.log('Service Worker: Not on Kaggle.com, disabling side panel');
+      console.log('Service Worker: Not on Kaggle.com, clearing competition context');
       
-      // Disable side panel and clear competition for non-Kaggle pages
-      await chrome.sidePanel.setOptions({
-        tabId,
-        enabled: false
-      });
-      
+      // Clear competition for non-Kaggle pages but keep side panel enabled
       await notifyCompetitionChange(null, tabId);
     }
   } catch (error) {
@@ -154,7 +142,7 @@ chrome.tabs.onUpdated.addListener(async (tabId, info, tab) => {
   }
 });
 
-// Listen for tab activation (switching between tabs) - FOR NOTIFICATIONS ONLY
+// Listen for tab activation (switching between tabs) - FOR COMPETITION DETECTION ONLY
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   console.log('Service Worker: Tab activated:', activeInfo.tabId);
   
@@ -165,10 +153,12 @@ chrome.tabs.onActivated.addListener(async (activeInfo) => {
     if (tab.url) {
       const url = new URL(tab.url);
       
+      // Only detect competition on Kaggle, but don't restrict side panel
       if (url.origin === KAGGLE_ORIGIN) {
         const detectedCompetition = detectCompetitionFromURL(tab.url);
         await notifyCompetitionChange(detectedCompetition, activeInfo.tabId);
       } else {
+        // Clear competition context for non-Kaggle pages
         await notifyCompetitionChange(null, activeInfo.tabId);
       }
     }
