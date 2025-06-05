@@ -9,6 +9,7 @@ import {
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid'
 import { type Competition } from '../types/competition'
 import { globalConfig } from '../config/globalConfig'
+import { useToast } from './ToastProvider'
 import { useApiKeys } from '../hooks/useApiKeys'
 
 // 🎛️ FRAMER MOTION ANIMATION CONTROLS - Performance optimized values
@@ -87,6 +88,7 @@ export default function Navbar({
   onCompetitionChange, 
   onClearHistory
 }: NavbarProps) {
+  const { showToast } = useToast();
   const [competitions, setCompetitions] = useState<Competition[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -125,7 +127,7 @@ export default function Navbar({
 
   const handleSaveApiKeys = async () => {
     if (!openaiApiKey.trim()) {
-      alert('OpenAI API key is required');
+      showToast('OpenAI API key is required', 'warning');
       return;
     }
 
@@ -146,10 +148,10 @@ export default function Navbar({
       // Refresh the API keys hook state
       await refreshApiKeys();
       
-      alert('API keys saved successfully! Agent has been reinitialized.');
+      showToast('API keys saved successfully! Agent has been reinitialized.', 'success');
     } catch (error) {
       console.error('Error saving API keys:', error);
-      alert('Failed to save API keys. Please try again.');
+      showToast('Failed to save API keys. Please try again.', 'error');
     } finally {
       setIsSavingKeys(false);
     }
@@ -169,11 +171,11 @@ export default function Navbar({
         // Reset global config
         await globalConfig.resetToDefaults();
         
-        alert('All data has been reset successfully. The extension will now reload.');
+        showToast('All data has been reset successfully. The extension will now reload.', 'success');
         window.location.reload();
       } catch (error) {
         console.error('Error resetting data:', error);
-        alert('Failed to reset data. Please try again.');
+        showToast('Failed to reset data. Please try again.', 'error');
       }
     }
   };
@@ -257,11 +259,11 @@ export default function Navbar({
         console.log('Navbar: Successfully cleared history');
       } else {
         console.error('Navbar: Failed to clear history');
-        alert('Failed to clear history. Please try again.');
+        showToast('Failed to clear history. Please try again.', 'error');
       }
     } catch (error) {
       console.error('Navbar: Error clearing history:', error);
-      alert('An error occurred while clearing history.');
+      showToast('An error occurred while clearing history.', 'error');
     } finally {
       setIsClearing(false);
     }

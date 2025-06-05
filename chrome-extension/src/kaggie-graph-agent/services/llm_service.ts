@@ -25,13 +25,12 @@ export class LLMService {
     // Conditionally build tools array based on Tavily API key availability
     this.tools = [ragTool];
     
-    // Only include web search tool if Tavily API key is configured
-    const tavilyApiKey = globalConfig.getTavilyApiKey();
-    if (tavilyApiKey && tavilyApiKey.trim() !== '') {
-      console.log('LLMService: Tavily API key found, enabling web search tool');
+    // Only include web search tool if Tavily API key is configured and valid
+    if (globalConfig.isValidTavilyApiKey()) {
+      console.log('LLMService: Valid Tavily API key found, enabling web search tool');
       this.tools.push(webSearchTool);
     } else {
-      console.log('LLMService: No Tavily API key configured, web search tool disabled');
+      console.log('LLMService: No valid Tavily API key configured, web search tool disabled');
     }
     
     // LLM with tools bound (exact same as Python)

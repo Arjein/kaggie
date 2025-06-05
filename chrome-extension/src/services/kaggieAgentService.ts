@@ -154,8 +154,8 @@ export class KaggieAgentService {
         currentThreadId: config.currentThreadId
       });
       
-      if (!config.openaiApiKey || !config.tavilyApiKey) {
-        console.warn('KaggieAgentService: Missing required API keys in storage');
+      if (!config.openaiApiKey) {
+        console.warn('KaggieAgentService: Missing required OpenAI API key in storage');
         this.isInitialized = false;
         return false;
       }

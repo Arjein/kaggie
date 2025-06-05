@@ -9,13 +9,13 @@ import { TavilySearchAPIRetriever } from "@langchain/community/retrievers/tavily
 export const webSearchTool = tool(
   async ({ query }: { query: string }) => {
     try {
-      const tavilyApiKey = globalConfig.getTavilyApiKey();
-      
-      // Check if API key is available
-      if (!tavilyApiKey || tavilyApiKey.trim() === '') {
-        console.warn('🔍 Web Search: No Tavily API key configured');
-        return "Web search is not available - Tavily API key not configured.";
+      // Check if API key is available and valid
+      if (!globalConfig.isValidTavilyApiKey()) {
+        console.warn('🔍 Web Search: No valid Tavily API key configured');
+        return "Web search is not available - Tavily API key not configured or invalid.";
       }
+      
+      const tavilyApiKey = globalConfig.getTavilyApiKey();
 
       const retriever = new TavilySearchAPIRetriever({
         k: 3,
@@ -38,7 +38,9 @@ export const webSearchTool = tool(
       return formattedResults.join('\n\n');
     } catch (error) {
       console.error('Web search tool error:', error);
-      return `Web search failed: ${error}`;
+      // Return a clean error message without exposing the raw error object
+      // which might contain malformed LangChain message data
+      return "Web search temporarily unavailable. Please try again later.";
     }
   },
   {

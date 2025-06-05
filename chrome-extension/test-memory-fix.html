@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Saver Fix Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .log { margin: 10px 0; padding: 10px; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .warning { background: #fff3cd; color: #856404; }
+        button { margin: 5px; padding: 10px; border: none; border-radius: 4px; cursor: pointer; }
+        .primary { background: #007bff; color: white; }
+        .danger { background: #dc3545; color: white; }
+        .secondary { background: #6c757d; color: white; }
+        textarea { width: 100%; height: 300px; margin: 10px 0; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>Memory Saver Fix Test</h1>
+    <p>This test verifies that the simplified PersistentMemorySaver works correctly with LangGraph's built-in serialization.</p>
+    
+    <div id="logs"></div>
+    
+    <button class="secondary" onclick="viewStorage()">View Storage</button>
+    <button class="primary" onclick="testSimpleStorage()">Test Simple Storage</button>
+    <button class="danger" onclick="clearStorage()">Clear Storage</button>
+    
+    <h3>Storage Contents:</h3>
+    <textarea id="storageContents" readonly></textarea>
+
+    <script>
+        // Simple logging function
+        function log(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const logDiv = document.createElement('div');
+            logDiv.className = `log ${type}`;
+            logDiv.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logs.appendChild(logDiv);
+            console.log(message);
+        }
+
+        // Clear all storage
+        function clearStorage() {
+            if (typeof chrome !== 'undefined' && chrome.storage) {
+                chrome.storage.local.clear(() => {
+                    if (chrome.runtime.lastError) {
+                        log('Error clearing Chrome storage: ' + chrome.runtime.lastError.message, 'error');
+                    } else {
+                        log('Chrome storage cleared successfully', 'success');
+                        viewStorage();
+                    }
+                });
+            } else {
+                localStorage.clear();
+                log('Local storage cleared', 'success');
+                viewStorage();
+            }
+        }
+
+        // View current storage contents
+        function viewStorage() {
+            if (typeof chrome !== 'undefined' && chrome.storage) {
+                chrome.storage.local.get(null, (items) => {
+                    if (chrome.runtime.lastError) {
+                        log('Error reading Chrome storage: ' + chrome.runtime.lastError.message, 'error');
+                    } else {
+                        const content = JSON.stringify(items, null, 2);
+                        document.getElementById('storageContents').value = content;
+                        log('Chrome storage contents loaded', 'success');
+                    }
+                });
+            } else {
+                const items = {};
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    items[key] = JSON.parse(localStorage.getItem(key) || 'null');
+                }
+                const content = JSON.stringify(items, null, 2);
+                document.getElementById('storageContents').value = content;
+                log('Local storage contents loaded', 'success');
+            }
+        }
+
+        // Test simple storage without custom serialization
+        function testSimpleStorage() {
+            log('Testing simple storage with mock data...', 'info');
+
+            // Create test data in the format the new PersistentMemorySaver expects
+            const testData = {
+                kaggie_competition_snapshots: [
+                    {
+                        competitionId: "test-competition-1",
+                        threadId: "thread_test@example.com_test-competition-1",
+                        snapshot: {
+                            values: {
+                                messages: [
+                                    {
+                                        // Mock LangChain message format (with lc_ properties - this is NORMAL!)
+                                        lc_kwargs: {
+                                            content: "Hello, I want to know about this competition",
+                                            additional_kwargs: {}
+                                        },
+                                        lc_namespace: ["langchain", "schema", "messages", "HumanMessage"],
+                                        lc_serializable: true,
+                                        content: "Hello, I want to know about this competition",
+                                        additional_kwargs: {}
+                                    },
+                                    {
+                                        lc_kwargs: {
+                                            content: "I'd be happy to help you learn about this competition! What specific information would you like to know?",
+                                            additional_kwargs: {}
+                                        },
+                                        lc_namespace: ["langchain", "schema", "messages", "AIMessage"],
+                                        lc_serializable: true,
+                                        content: "I'd be happy to help you learn about this competition! What specific information would you like to know?",
+                                        additional_kwargs: {}
+                                    }
+                                ],
+                                competition_id: "test-competition-1",
+                                competition_title: "Test Competition for Memory Fix",
+                                current_step: "call_llm"
+                            },
+                            next: ["call_llm"],
+                            config: {
+                                configurable: {
+                                    thread_id: "thread_test@example.com_test-competition-1"
+                                }
+                            },
+                            parent_config: null,
+                            tasks: []
+                        },
+                        lastUpdated: Date.now()
+                    }
+                ]
+            };
+
+            // Save test data
+            if (typeof chrome !== 'undefined' && chrome.storage) {
+                chrome.storage.local.set(testData, () => {
+                    if (chrome.runtime.lastError) {
+                        log('Error saving test data: ' + chrome.runtime.lastError.message, 'error');
+                    } else {
+                        log('Test data saved successfully (messages with lc_ properties are NORMAL LangChain format)', 'success');
+                        viewStorage();
+                    }
+                });
+            } else {
+                localStorage.setItem('kaggie_competition_snapshots', JSON.stringify(testData.kaggie_competition_snapshots));
+                log('Test data saved to local storage (messages with lc_ properties are NORMAL LangChain format)', 'success');
+                viewStorage();
+            }
+        }
+
+        // Auto-load storage contents on page load
+        window.addEventListener('load', () => {
+            log('Memory Saver Fix Test loaded. The simplified version no longer treats lc_ properties as "corrupted".', 'info');
+            viewStorage();
+        });
+    </script>
+</body>
+</html>

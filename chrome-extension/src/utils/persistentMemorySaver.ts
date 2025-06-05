@@ -1,5 +1,11 @@
 import { MemorySaver, type StateSnapshot } from "@langchain/langgraph/web";
 import { type RunnableConfig } from "@langchain/core/runnables";
+import { 
+  HumanMessage, 
+  AIMessage, 
+  SystemMessage, 
+  ToolMessage 
+} from "@langchain/core/messages";
 
 /**
  * Interface for storing state snapshots per competition
@@ -13,7 +19,7 @@ interface CompetitionStateSnapshot {
 
 /**
  * Persistent Memory Saver that stores StateSnapshots per competition
- * Each competition gets its own snapshot that is updated when the agent state changes
+ * This version works with LangGraph's built-in serialization without interference
  */
 export class PersistentMemorySaver extends MemorySaver {
   private readonly storageKey = 'kaggie_competition_snapshots';
@@ -22,6 +28,71 @@ export class PersistentMemorySaver extends MemorySaver {
 
   constructor() {
     super();
+  }
+
+  /**
+   * Helper function to properly deserialize messages from stored state
+   * This fixes the LangChain message coercion error by recreating proper message instances
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private deserializeMessages(messages: any[]): any[] {
+    if (!Array.isArray(messages)) return messages;
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return messages.map((msg: any) => {
+      // If message already has proper class type, return as-is
+      if (msg?.constructor?.name?.includes('Message')) {
+        return msg;
+      }
+      
+      // Handle serialized LangChain messages with lc_kwargs
+      if (msg?.lc_kwargs || msg?.lc_serializable) {        
+        // Determine message type from content or lc_namespace
+        const content = msg.content || msg.lc_kwargs?.content || '';
+        const id = msg.id || msg.lc_kwargs?.id;
+        const additional_kwargs = msg.additional_kwargs || msg.lc_kwargs?.additional_kwargs || {};
+        const response_metadata = msg.response_metadata || msg.lc_kwargs?.response_metadata || {};
+        
+        // Reconstruct proper message instance based on type indicators
+        if (msg.lc_namespace?.includes('messages') || msg._type) {
+          const msgType = msg._type || (msg.lc_namespace?.[msg.lc_namespace.length - 1]);
+          
+          switch (msgType) {
+            case 'human':
+              return new HumanMessage({ content, id, additional_kwargs, response_metadata });
+            case 'ai':
+              return new AIMessage({ content, id, additional_kwargs, response_metadata });
+            case 'system':
+              return new SystemMessage({ content, id, additional_kwargs, response_metadata });
+            case 'tool':
+              return new ToolMessage({ content, id, additional_kwargs, response_metadata, tool_call_id: msg.tool_call_id });
+            default:
+              // Default to HumanMessage if type unclear
+              return new HumanMessage({ content, id, additional_kwargs, response_metadata });
+          }
+        }
+      }
+      
+      // For regular message-like objects, return as-is
+      return msg;
+    });
+  }
+
+  /**
+   * Helper to clean state values by deserializing messages
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private cleanStateValues(values: any): any {
+    if (!values || typeof values !== 'object') return values;
+    
+    const cleaned = { ...values };
+    
+    // Handle messages array if present
+    if (cleaned.messages && Array.isArray(cleaned.messages)) {
+      cleaned.messages = this.deserializeMessages(cleaned.messages);
+    }
+    
+    return cleaned;
   }
 
   /**
@@ -36,6 +107,9 @@ export class PersistentMemorySaver extends MemorySaver {
       console.log('PersistentMemorySaver: Initialized with', this.competitionSnapshots.size, 'competition snapshots');
     } catch (error) {
       console.error('PersistentMemorySaver: Failed to initialize:', error);
+      
+      // If loading fails, start fresh
+      console.log('PersistentMemorySaver: Starting with clean state');
       this.initialized = true;
     }
   }
@@ -46,7 +120,9 @@ export class PersistentMemorySaver extends MemorySaver {
   async restoreStateForThread(
     competitionId: string,
     threadId: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     graph: any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     config: any
   ): Promise<boolean> {
     await this.initialize();
@@ -59,9 +135,14 @@ export class PersistentMemorySaver extends MemorySaver {
     
     try {
       console.log(`🔄 PersistentMemorySaver: Restoring state for competition: ${competitionId}, thread: ${threadId}`);
+      console.log("SNAPSHOT BEFORE UPDATE: ", stored.snapshot)
       
-      // Use LangGraph's updateState to restore the saved state
-      await graph.updateState(config, stored.snapshot.values);
+      // Clean and deserialize the state values to fix message coercion issues
+      const cleanedValues = this.cleanStateValues(stored.snapshot.values);
+      console.log("CLEANED VALUES AFTER DESERIALIZATION: ", cleanedValues);
+      
+      // Use LangGraph's updateState to restore the cleaned state
+      await graph.updateState(config, cleanedValues);
       
       console.log(`✅ PersistentMemorySaver: Successfully restored state for competition: ${competitionId}`);
       return true;
@@ -169,7 +250,7 @@ export class PersistentMemorySaver extends MemorySaver {
 
       const storedSnapshots = JSON.parse(data) as CompetitionStateSnapshot[];
       
-      // Load into memory
+      // Load into memory - LangGraph handles serialization internally
       this.competitionSnapshots.clear();
       storedSnapshots.forEach(snapshot => {
         if (snapshot.competitionId && snapshot.snapshot) {
@@ -188,6 +269,7 @@ export class PersistentMemorySaver extends MemorySaver {
    */
   private async saveToStorage(): Promise<void> {
     try {
+      // Convert to array for storage - LangGraph handles serialization
       const snapshotsArray = Array.from(this.competitionSnapshots.values());
 
       if (typeof chrome !== 'undefined' && chrome.storage) {
@@ -229,15 +311,12 @@ export class PersistentMemorySaver extends MemorySaver {
     await this.initialize();
     
     console.log(`PersistentMemorySaver: Attempting to clear thread ${threadId}`);
-    console.log(`PersistentMemorySaver: Current snapshots:`, this.listCompetitions().map(s => ({ competitionId: s.competitionId, threadId: s.threadId })));
     
     // Remove all snapshots that match the thread ID
     const toDelete: string[] = [];
     this.competitionSnapshots.forEach((snapshot, competitionId) => {
-      console.log(`PersistentMemorySaver: Checking snapshot - competitionId: ${competitionId}, threadId: ${snapshot.threadId} vs target: ${threadId}`);
       if (snapshot.threadId === threadId) {
         toDelete.push(competitionId);
-        console.log(`PersistentMemorySaver: Found match - will delete competition ${competitionId}`);
       }
     });
     
@@ -249,23 +328,7 @@ export class PersistentMemorySaver extends MemorySaver {
       await this.saveToStorage();
       console.log(`PersistentMemorySaver: Successfully cleared ${toDelete.length} snapshots for thread ${threadId}`);
     } else {
-      console.log(`PersistentMemorySaver: No snapshots found for thread ${threadId} - this might be the issue!`);
-      
-      // Let's also try to clear by competition ID extracted from thread ID
-      // Thread ID format: thread_email_competitionId
-      const threadParts = threadId.split('_');
-      if (threadParts.length >= 3) {
-        const competitionId = threadParts.slice(2).join('_'); // Handle competition IDs with underscores
-        console.log(`PersistentMemorySaver: Trying to clear by extracted competition ID: ${competitionId}`);
-        
-        if (this.competitionSnapshots.has(competitionId)) {
-          this.competitionSnapshots.delete(competitionId);
-          await this.saveToStorage();
-          console.log(`PersistentMemorySaver: Successfully cleared snapshot for competition ${competitionId}`);
-        } else {
-          console.log(`PersistentMemorySaver: No snapshot found for competition ID ${competitionId} either`);
-        }
-      }
+      console.log(`PersistentMemorySaver: No snapshots found for thread ${threadId}`);
     }
   }
 
@@ -291,6 +354,34 @@ export class PersistentMemorySaver extends MemorySaver {
     }
     
     console.log('PersistentMemorySaver: Cleared all competition snapshots');
+  }
+
+  /**
+   * Force clear storage and reset - useful for fixing corrupted data
+   */
+  async forceReset(): Promise<void> {
+    console.log('PersistentMemorySaver: Force resetting storage...');
+    
+    // Clear in-memory state
+    this.competitionSnapshots.clear();
+    this.initialized = false;
+    
+    // Clear Chrome storage
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+      await new Promise<void>((resolve, reject) => {
+        chrome.storage.local.clear(() => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve();
+          }
+        });
+      });
+    } else {
+      localStorage.clear();
+    }
+    
+    console.log('PersistentMemorySaver: Storage force reset complete');
   }
 
   /**

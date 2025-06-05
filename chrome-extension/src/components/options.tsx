@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 import { globalConfig } from '../config/globalConfig';
+import { useToast } from './ToastProvider';
+import { useConfirmDialog } from './ConfirmDialog';
 
 export default function OptionsPage() {
+  const { showToast } = useToast();
+  const { showConfirm } = useConfirmDialog();
   const [openaiKey, setOpenaiKey] = useState('');
   const [tavilyKey, setTavilyKey] = useState('');
   const [backendUrl, setBackendUrl] = useState('');
@@ -25,13 +29,13 @@ export default function OptionsPage() {
 
   const handleSave = async () => {
     if (!openaiKey.trim()) {
-      alert('Please enter your OpenAI API key');
+      showToast('Please enter your OpenAI API key', 'warning');
       return;
     }
 
     if (!tavilyKey.trim()) {
-      alert('Tavily API key is required for the enhanced Kaggie agent');
-      return;
+      showToast('Please enter your Tavily API key, or leave empty to disable web search', 'info');
+      // Don't return - allow saving without Tavily key
     }
 
     setIsLoading(true);
@@ -52,19 +56,27 @@ export default function OptionsPage() {
       
       setTimeout(() => {
         setIsLoading(false);
-        alert('Settings saved successfully! Agent has been reinitialized.');
+        showToast('Settings saved successfully! Agent has been reinitialized.', 'success');
       }, 800);
     } catch (error) {
       console.error('Failed to save settings:', error);
       setIsLoading(false);
-      alert('Failed to save settings. Please try again.');
+      showToast('Failed to save settings. Please try again.', 'error');
     }
   };
 
-  const clearHistory = () => {
-    if (confirm('Are you sure you want to clear all chat history?')) {
+  const clearHistory = async () => {
+    const confirmed = await showConfirm({
+      title: 'Clear Chat History',
+      message: 'Are you sure you want to clear all chat history? This action cannot be undone.',
+      confirmText: 'Clear History',
+      cancelText: 'Cancel',
+      variant: 'danger'
+    });
+    
+    if (confirmed) {
       chrome.storage.local.clear(() => {
-        alert('History cleared!');
+        showToast('History cleared!', 'success');
       });
     }
   };
@@ -137,7 +149,7 @@ export default function OptionsPage() {
             <div>
               <label htmlFor="tavilyKey" className="block text-sm font-medium text-gray-700 mb-2">
                 Tavily API Key
-                <span className="text-red-500">*</span>
+                <span className="text-yellow-500">(Optional)</span>
               </label>
               <div className="relative">
                 <input 
@@ -160,7 +172,7 @@ export default function OptionsPage() {
                 </button>
               </div>
               <p className="text-xs text-gray-500 mt-2">
-                🔍 Used for web search. 
+                🔍 Enables web search capabilities. Leave empty to disable web search. 
                 <a href="https://tavily.com/" target="_blank" className="text-blue-600 hover:text-blue-700 underline">Get your key</a>
               </p>
             </div>

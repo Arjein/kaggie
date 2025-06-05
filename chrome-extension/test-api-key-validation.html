@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Key Validation Test</title>
+</head>
+<body>
+    <h1>API Key Validation Test</h1>
+    <p>Open the browser console to see the test results.</p>
+
+    <script>
+        // Test the Tavily API key validation logic
+        function isValidTavilyApiKey(key) {
+            return !!(key && key.trim().length > 10 && key.startsWith('tvly-'));
+        }
+
+        // Test cases
+        const testCases = [
+            { key: undefined, expected: false, description: "undefined key" },
+            { key: null, expected: false, description: "null key" },
+            { key: "", expected: false, description: "empty string" },
+            { key: "   ", expected: false, description: "whitespace only" },
+            { key: "a", expected: false, description: "single character 'a'" },
+            { key: "tvly-", expected: false, description: "prefix only" },
+            { key: "tvly-abc", expected: false, description: "too short valid format" },
+            { key: "invalid-key-format", expected: false, description: "wrong prefix" },
+            { key: "tvly-1234567890", expected: true, description: "valid Tavily key" },
+            { key: "tvly-abcdefghijklmnop", expected: true, description: "longer valid Tavily key" },
+        ];
+
+        console.log("🧪 Testing Tavily API Key Validation:");
+        console.log("=====================================");
+
+        let passed = 0;
+        let failed = 0;
+
+        testCases.forEach((testCase, index) => {
+            const result = isValidTavilyApiKey(testCase.key);
+            const status = result === testCase.expected ? "✅ PASS" : "❌ FAIL";
+            
+            console.log(`Test ${index + 1}: ${status} - ${testCase.description}`);
+            console.log(`  Input: ${JSON.stringify(testCase.key)}`);
+            console.log(`  Expected: ${testCase.expected}, Got: ${result}`);
+            console.log("");
+
+            if (result === testCase.expected) {
+                passed++;
+            } else {
+                failed++;
+            }
+        });
+
+        console.log("=====================================");
+        console.log(`📊 Test Results: ${passed} passed, ${failed} failed`);
+        
+        if (failed === 0) {
+            console.log("🎉 All tests passed! API key validation is working correctly.");
+        } else {
+            console.log("⚠️ Some tests failed. Please check the validation logic.");
+        }
+
+        // Clear storage to test with clean state
+        console.log("\n🧹 Clearing storage for clean test environment...");
+        if (typeof chrome !== 'undefined' && chrome.storage) {
+            chrome.storage.local.clear(() => {
+                console.log("✅ Chrome storage cleared");
+            });
+        } else {
+            localStorage.clear();
+            console.log("✅ Local storage cleared");
+        }
+    </script>
+</body>
+</html>

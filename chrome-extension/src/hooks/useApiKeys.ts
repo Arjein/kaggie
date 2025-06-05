@@ -37,7 +37,8 @@ export function useApiKeys() {
         }
       });
       
-      const hasKeys = !!(result.openaiApiKey && result.tavilyApiKey);
+      // Only require OpenAI API key, Tavily is optional
+      const hasKeys = !!result.openaiApiKey;
       console.log('useApiKeys: Chrome storage check result:', { 
         hasOpenAI: !!result.openaiApiKey, 
         hasTavily: !!result.tavilyApiKey,

@@ -3,6 +3,9 @@ import TextArea from "./components/textArea";
 import Navbar from "./components/navbar";
 import { useChat } from "./hooks/useChat";
 import { useApiKeys } from "./hooks/useApiKeys";
+import { ToastProvider } from "./components/ToastProvider";
+import { ConfirmDialogProvider } from "./components/ConfirmDialog";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 
 
@@ -19,7 +22,10 @@ function App() {
     } = useChat();
 
     return (
-      <main className="min-h-screen bg-primary flex flex-col h-screen text-primary overflow-hidden">
+      <ErrorBoundary>
+        <ToastProvider>
+          <ConfirmDialogProvider>
+            <main className="min-h-screen bg-primary flex flex-col h-screen text-primary overflow-hidden">
         {/* Navigation with integrated controls */}
         <Navbar 
           selectedCompetition={selectedCompetition}
@@ -55,7 +61,10 @@ function App() {
             /> 
           </div>
         </div>
-      </main>
+        </main>
+          </ConfirmDialogProvider>
+        </ToastProvider>
+      </ErrorBoundary>
     )
 }
 

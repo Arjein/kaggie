@@ -165,6 +165,14 @@ class GlobalConfigService {
   }
 
   /**
+   * Check if Tavily API key is valid
+   */
+  public isValidTavilyApiKey(): boolean {
+    const key = this.config.tavilyApiKey;
+    return !!(key && key.trim().length > 10 && key.startsWith('tvly-'));
+  }
+
+  /**
    * Get the OpenAI API key
    */
   public getOpenAIApiKey(): string | undefined {
@@ -244,6 +252,7 @@ export const globalConfig = GlobalConfigService.getInstance();
 export const getBackendUrl = (): string => globalConfig.getBackendUrl();
 export const getOpenAIApiKey = (): string | undefined => globalConfig.getOpenAIApiKey();
 export const getTavilyApiKey = (): string | undefined => globalConfig.getTavilyApiKey();
+export const isValidTavilyApiKey = (): boolean => globalConfig.isValidTavilyApiKey();
 export const getCurrentThreadId = (): string | undefined => globalConfig.getCurrentThreadId();
 export const setUserEmail = (email: string): Promise<void> => globalConfig.updateConfig({ userEmail: email });
 export const getUserEmail = (): string | undefined => globalConfig.getConfig().userEmail;
