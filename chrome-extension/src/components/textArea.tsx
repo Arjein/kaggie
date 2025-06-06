@@ -83,35 +83,33 @@ export default function TextArea({ onSendMessage, isLoading, canSendMessage = tr
 
     return (
         <form className="mt-auto p-4" onSubmit={handleSubmit}>
-            <div className="flex flex-col border border-subtle rounded-xl bg-overlay shadow-sm">
+            <div className="flex flex-col border border-border-subtle rounded-xl bg-bg-overlay shadow-sm">
                 <textarea
                     ref={textareaRef}
                     value={input}
                     onChange={handleChange}
                     onKeyDown={handleKeyDown}
-                    className="p-3 text-adaptive text-primary bg-transparent min-h-[40px] max-h-[160px] border-none focus:outline-none focus:ring-0 resize-none rounded-xl w-full placeholder-muted"
+                    className="p-3 text-adaptive text-text-primary bg-transparent min-h-[40px] max-h-[160px] border-none focus:outline-none focus:ring-0 resize-none rounded-xl w-full placeholder-text-muted"
                     placeholder={getPlaceholder()}
                     rows={1}
                     style={{ height: `${minHeight}px` }}
                     disabled={!canSendMessage}
                 />
-                <div className="flex justify-between items-center px-3 pb-2">
-                    <div className="text-xs text-muted">
-                        {selectedCompetition && `Context: ${selectedCompetition.title}`}
-                    </div>
+                <div className="flex justify-end items-center px-3 pb-2">
+                    
                     <button
                         type="submit"
                         aria-label="Send message"
-                        className="p-2 rounded-lg text-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        className="p-1 rounded-lg text-primary hover:bg-secondary/20 focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                         disabled={isLoading || !input.trim() || !canSendMessage}
                     >
                         {isLoading ? (
-                            <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <svg className="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                             </svg>
                         ) : (
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                             </svg>
                         )}

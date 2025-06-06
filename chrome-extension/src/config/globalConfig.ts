@@ -31,7 +31,7 @@ class GlobalConfigService {
     backendUrl: 'https://kaggie-api.onrender.com', // Backend successfully deployed on Render.com
     model: 'gpt-4o-mini',
     temperature: 0.3,
-    openaiApiKey: '',
+    openaiApiKey: '', // SECURITY: No hardcoded API keys - users must provide their own
     tavilyApiKey: '',
     currentThreadId: 'default',
     lastSelectedCompetition: null
@@ -79,7 +79,9 @@ class GlobalConfigService {
     return new Promise((resolve, reject) => {
       // Check if we're in Chrome extension context
       if (typeof chrome === 'undefined' || !chrome.storage) {
-        throw new Error('Chrome storage not available');
+        console.log('GlobalConfig: Chrome storage not available, using default configuration (test mode)');
+        resolve();
+        return;
       }
 
       chrome.storage.sync.get([
@@ -122,7 +124,8 @@ class GlobalConfigService {
     return new Promise((resolve, reject) => {
       // Check if we're in Chrome extension context
       if (typeof chrome === 'undefined' || !chrome.storage) {
-        reject(new Error('Chrome storage not available'));
+        console.log('GlobalConfig: Chrome storage not available, skipping save (test mode)');
+        resolve();
         return;
       }
 

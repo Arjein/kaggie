@@ -3,7 +3,11 @@ import { HumanMessage, AIMessage } from "@langchain/core/messages";
 import { KaggieAgent } from '../kaggie-graph-agent/graph/main_agent_graph';
 import { globalConfig, type GlobalConfig } from '../config/globalConfig';
 import { storageService } from './storageService';
-import type { Message } from '../types/message';
+import { 
+  isAIMessage as isAIMessageUtil, 
+  extractMessageContent as extractContentUtil 
+} from '../utils/messageSerializer';
+import { formatAuthenticationError } from '../utils/apiKeyValidation';
 
 
 // Define interfaces for better typing
@@ -17,89 +21,23 @@ interface AgentResponse {
   [key: string]: unknown;
 }
 
-// Define types for message handling
-interface MessageLike {
-  content?: string | Array<{ text?: string; content?: string }>;
-  constructor?: { name: string };
-  role?: string;
-  type?: string;
-  id?: string;
-}
-
 // Competition type for sendMessage
 export type Competition = { id: string };
 
 /**
  * Helper function to robustly detect if a message is an AI message
- * Handles both proper LangChain instances and minified production builds
+ * Uses the utility from messageSerializer for consistent detection
  */
 function isAIMessage(message: unknown): boolean {
-  if (!message) return false;
-  
-  // First try instanceof check (works in development)
-  if (message instanceof AIMessage) {
-    return true;
-  }
-  
-  // Fallback checks for production builds where constructor names get minified
-  const msg = message as MessageLike;
-  
-  // Check for role property
-  if (msg.role === 'assistant' || msg.role === 'ai') {
-    return true;
-  }
-  
-  // Check for type property
-  if (msg.type === 'ai' || msg.type === 'assistant') {
-    return true;
-  }
-  
-  // Check for minified constructor names that might indicate AI messages
-  const constructorName = msg?.constructor?.name;
-  if (constructorName === 'We' || constructorName === 'AIMessage') {
-    return true;
-  }
-  
-  // Check if it's not a HumanMessage (process of elimination)
-  if (!(message instanceof HumanMessage) && 
-      msg.role !== 'user' && 
-      msg.type !== 'human' &&
-      constructorName !== 'HumanMessage') {
-    // If it has content and we can't identify it as human, assume it's AI
-    return !!msg.content;
-  }
-  
-  return false;
+  return isAIMessageUtil(message);
 }
 
 /**
  * Helper function to safely extract string content from a message
+ * Uses the utility from messageSerializer for consistent extraction
  */
 function extractMessageContent(message: unknown): string {
-  if (!message) return '';
-  
-  const msg = message as MessageLike;
-  if (!msg.content) return '';
-  
-  // If content is already a string, return it
-  if (typeof msg.content === 'string') {
-    return msg.content;
-  }
-  
-  // If content is an array, try to extract text
-  if (Array.isArray(msg.content)) {
-    return msg.content
-      .map((item: { text?: string; content?: string }) => {
-        if (typeof item === 'string') return item;
-        if (item?.text) return item.text;
-        if (item?.content) return item.content;
-        return '';
-      })
-      .join('');
-  }
-  
-  // Fallback: try to convert to string
-  return String(msg.content);
+  return extractContentUtil(message);
 }
 
 export class KaggieAgentService {
@@ -170,6 +108,16 @@ export class KaggieAgentService {
     } catch (error) {
       console.error('KaggieAgentService: Failed to initialize graph agent:', error);
       this.isInitialized = false;
+      
+      // Format authentication errors for better user experience
+      if (error instanceof Error) {
+        const friendlyError = formatAuthenticationError(error.message);
+        if (friendlyError !== error.message) {
+          // Re-throw with friendly message if it was an auth error
+          throw new Error(friendlyError);
+        }
+      }
+      
       return false;
     }
   }
@@ -271,22 +219,19 @@ export class KaggieAgentService {
           console.log('✅ KaggieAgentService.processQuery: Successfully saved state snapshot for competition:', competitionId);
           
           // 💬 SAVE CONVERSATIONS IMMEDIATELY - Same timing as snapshots
-          // Extract messages from the final state and save to conversations
+          // Extract messages from the final state and save to conversations with proper serialization
           const stateMessages = finalStateSnapshot.values?.messages || [];
           if (stateMessages.length > 0) {
             try {
-              // Convert agent state messages to our conversation format
-              const conversationMessages = this.convertAgentMessagesToConversation(stateMessages);
-              
-              // Save immediately to conversations storage (same as snapshot timing)
-              await storageService.updateMessages(
+              // Use the new StorageService method for proper LangChain message serialization
+              await storageService.storeLangChainMessages(
                 effectiveThreadId,
-                conversationMessages,
+                stateMessages,
                 competitionId,
                 this.getUserEmail()
               );
               
-              console.log(`💬 KaggieAgentService.processQuery: Successfully saved ${conversationMessages.length} conversation messages for thread ${effectiveThreadId}`);
+              console.log(`💬 KaggieAgentService.processQuery: Successfully saved ${stateMessages.length} LangChain messages for thread ${effectiveThreadId}`);
             } catch (conversationError) {
               console.error('❌ KaggieAgentService.processQuery: Failed to save conversation messages:', conversationError);
             }
@@ -401,7 +346,9 @@ export class KaggieAgentService {
     } catch (error) {
       console.error('❌ KaggieAgentService.sendMessage: Error occurred:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      onError(errorMessage);
+      // Format authentication errors to be user-friendly
+      const friendlyErrorMessage = formatAuthenticationError(errorMessage);
+      onError(friendlyErrorMessage);
     }
   }
 
@@ -469,26 +416,7 @@ export class KaggieAgentService {
     return this.isReady();
   }
 
-  /**
-   * Convert agent state messages to conversation format for storage
-   */
-  private convertAgentMessagesToConversation(agentMessages: MessageLike[]): Message[] {
-    return agentMessages
-      .filter((msg: MessageLike) => {
-        // Only include HumanMessage and AIMessage (not ToolMessage, SystemMessage, etc.)
-        const msgType = msg.constructor?.name || msg.type || '';
-        return msgType === 'HumanMessage' || msgType === 'AIMessage';
-      })
-      .map((msg: MessageLike, index: number) => {
-        const msgType = msg.constructor?.name || msg.type || '';
-        return {
-          id: index + 1, // Message interface expects number ID
-          type: msgType === 'HumanMessage' ? 'user' : 'system', // Match Message interface types
-          text: extractMessageContent(msg), // Use 'text' instead of 'content'
-          time: new Date().toISOString() // Use ISO string format for time
-        };
-      });
-  }
+
 
   /**
    * Get user email for conversation storage

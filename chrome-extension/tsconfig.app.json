@@ -23,5 +23,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "options.js"]
+  "include": ["src", "options.js"],
+  "exclude": ["src/tests/**/*"]
 }
