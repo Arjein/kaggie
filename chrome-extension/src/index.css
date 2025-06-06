@@ -103,6 +103,12 @@ body {
   font-size: var(--text-lg);
 }
 
+/* Extra small text for very narrow panels */
+.text-2xs {
+  font-size: 0.625rem; /* 10px */
+  line-height: 0.875rem; /* 14px */
+}
+
 /* Long text handling */
 .text-truncate-adaptive {
   overflow: hidden;

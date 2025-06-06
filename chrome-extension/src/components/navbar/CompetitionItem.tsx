@@ -67,7 +67,7 @@ export function CompetitionItem({
     <motion.div
       key={competition.id}
       variants={ANIMATION_CONFIG.item}
-      className={`w-full p-4 rounded-xl border transition-all duration-300 group ${
+      className={`w-full p-2 xs:p-3 sm:p-4 rounded-xl border transition-all duration-300 group ${
         isSelected 
           ? 'border-primary/50 bg-primary/10 shadow-lg shadow-primary/20' 
           : 'border-border-subtle hover:shadow-md bg-bg-overlay'
@@ -78,49 +78,49 @@ export function CompetitionItem({
       <div className="flex items-center justify-between">
         <button
           onClick={() => onSelect(competition)}
-          className="flex items-center space-x-4 flex-1 min-w-0 text-left hover:bg-secondary/50 rounded-lg p-2 -m-2 transition-colors duration-200"
+          className="flex items-center space-x-2 xs:space-x-3 sm:space-x-4 flex-1 min-w-0 text-left hover:bg-secondary/50 rounded-lg p-2 -m-2 transition-colors duration-200"
         >
-          <div className={`w-12 h-12 bg-gradient-to-br ${gradientClass} rounded-xl flex items-center justify-center flex-shrink-0 shadow-md ${
+          <div className={`w-8 h-8 xs:w-10 xs:h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${gradientClass} rounded-xl flex items-center justify-center flex-shrink-0 shadow-md ${
             isSelected ? 'ring-2 ring-primary/30' : ''
           }`}>
             {isStarred ? (
-              <StarIconSolid className="h-6 w-6 text-white" />
+              <StarIconSolid className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 text-white" />
             ) : (
-              <TrophyIcon className="h-6 w-6 text-white" />
+              <TrophyIcon className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 text-white" />
             )}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <p className={`text-base font-semibold truncate ${
+              <p className={`text-xs xs:text-sm sm:text-base font-semibold truncate ${
                 isSelected ? 'text-primary' : 'text-text-primary'
               }`}>
                 {competition.title}
               </p>
             </div>
             {competition.deadline && competition.deadline !== 'Indefinite' && (
-              <p className="text-sm text-text-muted">
+              <p className="text-2xs xs:text-xs sm:text-sm text-text-muted">
                 Deadline: {new Date(competition.deadline).toLocaleDateString()}
               </p>
             )}
             {competition.deadline === 'Indefinite' && (
-              <p className="text-sm text-text-muted">
+              <p className="text-2xs xs:text-xs sm:text-sm text-text-muted">
                 Rolling competition
               </p>
             )}
           </div>
         </button>
-        <div className="flex items-center space-x-2 ml-4">
+        <div className="flex items-center space-x-1 xs:space-x-2 ml-2 xs:ml-4">
           <button
             onClick={(e) => onToggleStar(competition.id, e)}
-            className={`p-2 hover:bg-bg-overlay rounded-lg transition-all duration-300 ${
+            className={`p-1 xs:p-2 hover:bg-bg-overlay rounded-lg transition-all duration-300 ${
               favoriteTransition === competition.id ? 'animate-pulse scale-110' : ''
             }`}
             title={starredCompetitions.has(competition.id) ? "Remove from favorites" : "Add to favorites"}
           >
             {starredCompetitions.has(competition.id) ? (
-              <StarIconSolid className="h-6 w-6 text-secondary" />
+              <StarIconSolid className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 text-secondary" />
             ) : (
-              <StarIcon className="h-6 w-6 text-text-muted hover:text-secondary" />
+              <StarIcon className="h-4 w-4 xs:h-5 xs:w-5 sm:h-6 sm:w-6 text-text-muted hover:text-secondary" />
             )}
           </button>
         </div>

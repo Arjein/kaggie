@@ -190,7 +190,7 @@ export default function ChatArea({ messages, onSendMessage, selectedCompetition 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
+                        transition={{ duration: 0.2 }}
                         className="contents"
                     >
                         {messages.map((message, index) => (
@@ -198,6 +198,7 @@ export default function ChatArea({ messages, onSendMessage, selectedCompetition 
                                 key={message.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
                                 transition={{ 
                                     delay: index * 0.05, 
                                     duration: 0.3,

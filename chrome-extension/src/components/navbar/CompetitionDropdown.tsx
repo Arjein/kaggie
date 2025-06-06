@@ -50,17 +50,17 @@ export function CompetitionDropdown({
 
     return (
       <motion.div 
-        className="mb-6"
+        className="mb-3 xs:mb-4 sm:mb-6"
         variants={ANIMATION_CONFIG.item}
       >
-        <div className="flex items-center gap-2 mb-3 px-1">
+        <div className="flex items-center gap-1 xs:gap-2 mb-2 xs:mb-2 sm:mb-3 px-1">
           {icon}
           <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wide">
             {title} ({competitions.length})
           </h4>
         </div>
         <motion.div 
-          className="space-y-2"
+          className="space-y-1 xs:space-y-1 sm:space-y-2"
           variants={ANIMATION_CONFIG.itemStagger}
           initial="initial"
           animate="animate"
@@ -104,7 +104,7 @@ export function CompetitionDropdown({
               </motion.div>
             ) : (
               <motion.div 
-                className="p-4 space-y-4"
+                className="p-2 xs:p-3 sm:p-4 space-y-2 xs:space-y-3 sm:space-y-4"
                 variants={ANIMATION_CONFIG.sectionStagger}
                 initial="initial"
                 animate="animate"
