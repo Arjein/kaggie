@@ -14,6 +14,7 @@ import {
   routeFromLLM,
   routeFromEvaluation
 } from '../agents/main_agent';
+import { globalConfig } from '../../config/globalConfig';
 
 
 
@@ -42,7 +43,7 @@ export class KaggieAgent {
   private evalAgentGraph: EvalAgentGraph;
   private static memorySaver = persistentMemorySaver; // Static singleton to persist across invocations
 
-  constructor(apiKey: string, backendUrl: string = 'https://kaggie-api.onrender.com') {
+  constructor(apiKey: string, backendUrl: string = globalConfig.getBackendUrl()) {
     this.llmService = new LLMService(apiKey);
     this.databaseService = new DatabaseService(backendUrl);
     this.evalAgentGraph = new EvalAgentGraph(this.llmService);

@@ -55,20 +55,20 @@ const ToastIcon: React.FC<{ type: ToastType }> = ({ type }) => {
 const ToastItem: React.FC<{ toast: Toast; onClose: (id: string) => void }> = ({ toast, onClose }) => {
   const getToastStyles = (type: ToastType) => {
     const styles = {
-      success: 'bg-green-50 border-green-200 text-green-800',
-      error: 'bg-red-50 border-red-200 text-red-800',
-      warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
-      info: 'bg-blue-50 border-blue-200 text-blue-800',
+      success: 'bg-accent-success/20 border-accent-success/30 text-text-primary',
+      error: 'bg-accent-error/20 border-accent-error/30 text-text-primary',
+      warning: 'bg-accent-warning/20 border-accent-warning/30 text-text-primary',
+      info: 'bg-primary/20 border-primary/30 text-text-primary',
     };
     return styles[type];
   };
 
   const getIconStyles = (type: ToastType) => {
     const styles = {
-      success: 'text-green-400 bg-green-100',
-      error: 'text-red-400 bg-red-100',
-      warning: 'text-yellow-400 bg-yellow-100',
-      info: 'text-blue-400 bg-blue-100',
+      success: 'text-accent-success bg-accent-success/20',
+      error: 'text-accent-error bg-accent-error/20',
+      warning: 'text-accent-warning bg-accent-warning/20',
+      info: 'text-primary bg-primary/20',
     };
     return styles[type];
   };
@@ -90,7 +90,7 @@ const ToastItem: React.FC<{ toast: Toast; onClose: (id: string) => void }> = ({ 
         </div>
         <button
           onClick={() => onClose(toast.id)}
-          className="ml-4 flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
+          className="ml-4 flex-shrink-0 text-text-muted hover:text-text-primary transition-colors"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -104,6 +104,10 @@ const ToastItem: React.FC<{ toast: Toast; onClose: (id: string) => void }> = ({ 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
 
+  const hideToast = useCallback((id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  }, []);
+
   const showToast = useCallback((message: string, type: ToastType = 'info', duration = 4000) => {
     const id = Math.random().toString(36).substr(2, 9);
     const newToast: Toast = { id, message, type, duration };
@@ -115,11 +119,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         hideToast(id);
       }, duration);
     }
-  }, []);
-
-  const hideToast = useCallback((id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
-  }, []);
+  }, [hideToast]);
 
   return (
     <ToastContext.Provider value={{ showToast, hideToast }}>

@@ -40,14 +40,14 @@ const ConfirmDialog: React.FC<{
   const getVariantStyles = () => {
     return variant === 'danger'
       ? {
-          confirmButton: 'bg-red-600 hover:bg-red-700 focus:ring-red-500',
-          icon: 'text-red-400',
-          iconBg: 'bg-red-100'
+          confirmButton: 'bg-accent-error hover:bg-accent-error/80 focus:ring-accent-error',
+          icon: 'text-accent-error',
+          iconBg: 'bg-accent-error/10'
         }
       : {
-          confirmButton: 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500',
-          icon: 'text-blue-400',
-          iconBg: 'bg-blue-100'
+          confirmButton: 'bg-primary hover:bg-primary-hover focus:ring-primary',
+          icon: 'text-primary',
+          iconBg: 'bg-primary/10'
         };
   };
 
@@ -62,7 +62,7 @@ const ConfirmDialog: React.FC<{
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+              className="fixed inset-0 bg-bg-modal/75 transition-opacity"
               onClick={onCancel}
             />
             
@@ -71,7 +71,7 @@ const ConfirmDialog: React.FC<{
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
+              className="relative transform overflow-hidden rounded-lg bg-bg-secondary px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 border border-border-subtle"
             >
               <div className="sm:flex sm:items-start">
                 <div className={`mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${styles.iconBg} sm:mx-0 sm:h-10 sm:w-10`}>
@@ -86,9 +86,9 @@ const ConfirmDialog: React.FC<{
                   )}
                 </div>
                 <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                  <h3 className="text-base font-semibold leading-6 text-gray-900">{title}</h3>
+                  <h3 className="text-base font-semibold leading-6 text-text-primary">{title}</h3>
                   <div className="mt-2">
-                    <p className="text-sm text-gray-500">{message}</p>
+                    <p className="text-sm text-text-muted">{message}</p>
                   </div>
                 </div>
               </div>
@@ -103,7 +103,7 @@ const ConfirmDialog: React.FC<{
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:mt-0 sm:w-auto"
+                  className="mt-3 inline-flex w-full justify-center rounded-md bg-bg-overlay px-3 py-2 text-sm font-semibold text-text-primary shadow-sm ring-1 ring-inset ring-border-subtle hover:bg-bg-secondary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 sm:mt-0 sm:w-auto"
                 >
                   {cancelText}
                 </button>

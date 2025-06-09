@@ -17,15 +17,15 @@ export function ConversationControls({
     <div className="flex items-center gap-2">
       {/* Conversation State Indicator */}
       <div className={`conversation-indicator ${isWaiting ? 'thinking' : ''}`}>
-        <div className="flex items-center gap-2 text-adaptive-sm text-muted">
+        <div className="flex items-center gap-2 text-adaptive-sm text-text-muted">
           {isWaiting ? (
             <>
-              <span className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-accent-warning animate-pulse" />
               <span>Thinking...</span>
             </>
           ) : (
             <>
-              <span className="w-2 h-2 rounded-full bg-green-500" />
+              <span className="w-2 h-2 rounded-full bg-accent-success" />
               <span>Ready</span>
             </>
           )}
@@ -59,7 +59,7 @@ export function ConversationControls({
           
           {/* Tooltip */}
           {showTooltip && (
-            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded whitespace-nowrap z-60">
+            <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-bg-modal text-text-primary text-xs px-2 py-1 rounded whitespace-nowrap z-60 border border-border-subtle">
               {isBookmarked ? 'Remove bookmark' : 'Bookmark conversation'}
             </div>
           )}
@@ -81,7 +81,7 @@ export function Breadcrumbs({ selectedCompetition, conversationLength = 0 }: Bre
   if (!selectedCompetition) return null;
 
   return (
-    <div className="flex items-center gap-2 text-adaptive-sm text-muted px-4 py-2 border-b border-subtle">
+    <div className="flex items-center gap-2 text-adaptive-sm text-text-muted px-4 py-2 border-b border-border-subtle">
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
       </svg>

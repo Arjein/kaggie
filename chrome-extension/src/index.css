@@ -6,16 +6,49 @@ html, body, #root {
   min-width: 0;
 }
 
-:root {
-  /* Colors - Minimalist Palette */
+/* Chrome Extension and localhost dropdown styling */
+.extension-dropdown-container {
+  position: relative;
+  z-index: 50;
+  /* Allow container to position dropdown correctly */
+  min-width: 0;
+  width: 100%;
+}
+
+/* Traditional dropdown styling */
+.extension-dropdown {
+  /* Traditional dropdown positioning */
+  z-index: 50 !important;
+  /* Ensure proper width */
+  min-width: 100% !important;
+  width: auto !important;
+  /* Better box-sizing */
+  box-sizing: border-box !important;
+}
+
+/* Allow overflow for dropdown content in all containers */
+nav, main, .navbar-container {
+  overflow: visible !important;
+}
+
+/* Ensure full viewport utilization */
+body {
+  overflow-x: visible !important;
+  min-width: 280px;
+}
+
+@theme {
+  
   --color-primary: oklch(0.7553 0.1505 233.22);
   --color-primary-hover: oklch(0.8053 0.1505 233.22);
+  --color-secondary: oklch(0.75 0.15 50);
+  --color-secondary-hover: oklch(0.8 0.15 50);
   --color-bg-primary: oklch(0.2309 0.006 271.15);
   --color-bg-secondary: oklch(0.2809 0.006 271.15);
   --color-bg-overlay: oklch(0.3309 0.006 271.15);
   --color-bg-modal: oklch(0.3509 0.006 271.15);
   --color-text-primary: oklch(0.95 0.006 271.15);
-  --color-text-secondary: oklch(0.75 0.006 271.15);
+  --color-text-secondary: oklch(0.75 0.15 50);
   --color-text-muted: oklch(0.55 0.006 271.15);
   --color-border: oklch(0.4 0.006 271.15);
   --color-border-subtle: oklch(0.35 0.006 271.15);
@@ -57,7 +90,7 @@ html, body, #root {
   --z-dropdown: 70;
 }
 
-/* Utility Classes */
+/* Custom utility classes that extend Tailwind functionality */
 .text-adaptive {
   font-size: var(--text-base);
 }
@@ -70,32 +103,10 @@ html, body, #root {
   font-size: var(--text-lg);
 }
 
-.bg-primary {
-  background-color: var(--color-bg-primary);
-}
-
-.bg-secondary {
-  background-color: var(--color-bg-secondary);
-}
-
-.bg-overlay {
-  background-color: var(--color-bg-overlay);
-}
-
-.text-primary {
-  color: var(--color-text-primary);
-}
-
-.text-secondary {
-  color: var(--color-text-secondary);
-}
-
-.text-muted {
-  color: var(--color-text-muted);
-}
-
-.border-subtle {
-  border-color: var(--color-border-subtle);
+/* Extra small text for very narrow panels */
+.text-2xs {
+  font-size: 0.625rem; /* 10px */
+  line-height: 0.875rem; /* 14px */
 }
 
 /* Long text handling */
@@ -278,4 +289,21 @@ html, body, #root {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+}
+
+/* Chrome Extension Side Panel specific overrides for dropdowns */
+/* Ensure dropdowns can break out of parent containers */
+.extension-dropdown-container {
+  position: relative;
+  z-index: 50;
+}
+
+/* Allow overflow for dropdown content */
+nav, main {
+  overflow: visible !important;
+}
+
+/* Ensure side panel can accommodate dropdowns */
+body {
+  overflow-x: visible !important;
 }
