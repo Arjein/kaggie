@@ -47,16 +47,21 @@
     "default_title": "Open Kaggie",
     "default_icon": {
       "16": "kaggie-32.png",
-      "32": "kaggie-48.png",
-      "48": "kaggie-64.png",
+      "24": "kaggie-32.png", 
+      "32": "kaggie-32.png",
+      "48": "kaggie-48.png",
+      "64": "kaggie-64.png",
       "96": "kaggie-96.png",
       "128": "kaggie-128.png"
     }
   },
   
-  "icons": {    
+  "icons": {
+    "16": "kaggie-32.png",
     "32": "kaggie-32.png",
     "48": "kaggie-48.png",
+    "64": "kaggie-64.png",
+    "96": "kaggie-96.png",
     "128": "kaggie-128.png"
   }
 }
