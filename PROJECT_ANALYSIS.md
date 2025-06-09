@@ -23,8 +23,8 @@
 **Issue**: Live API keys and credentials exposed in repository
 ```env
 # Before (EXPOSED):
-OPENAI_API_KEY=sk-proj-s6lZ9pyDgZ9M418Ao902n7...
-PINECONE_API_KEY=pcsk_7Qx6XP_JDw33P3hedjMeVeq...
+OPENAI_API_KEY=your_openai_api_key_here
+PINECONE_API_KEY=your_pinecone_api_key_here
 
 # After (SECURE):
 OPENAI_API_KEY=your_openai_api_key_here
