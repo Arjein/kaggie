@@ -56,7 +56,7 @@ export function CompetitionDropdown({
         <div className="flex items-center gap-1 xs:gap-2 mb-2 xs:mb-2 sm:mb-3 px-1">
           {icon}
           <h4 className="text-xs font-semibold text-text-primary uppercase tracking-wide">
-            {title} ({competitions.length})
+            {title}{competitions.length !== 1 ? ` (${competitions.length})` : ""}
           </h4>
         </div>
         <motion.div 
@@ -100,7 +100,7 @@ export function CompetitionDropdown({
               >
                 <TrophyIcon className="h-12 w-12 mx-auto mb-3 text-text-muted" />
                 <p className="text-lg">No competitions found</p>
-                <p className="text-sm text-text-muted mt-1">Check your backend connection</p>
+                <p className="text-sm text-text-muted mt-1">Check your network connection</p>
               </motion.div>
             ) : (
               <motion.div 
@@ -132,8 +132,8 @@ export function CompetitionDropdown({
                 {/* Active Competitions Section */}
                 {renderCompetitionSection(
                   "Active Competitions",
-                  <div className="w-4 h-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                    <TrophyIcon className="h-2.5 w-2.5 text-white" />
+                  <div className="w-4 h-4 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
                   </div>,
                   competitions.filter(comp => {
                     if (starredCompetitions.has(comp.id) || comp.id === selectedCompetition?.id) return false;
@@ -145,7 +145,7 @@ export function CompetitionDropdown({
                 {renderCompetitionSection(
                   "Rolling Competitions",
                   <div className="w-4 h-4 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center">
-                    <TrophyIcon className="h-2.5 w-2.5 text-white" />
+                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
                   </div>,
                   competitions.filter(comp => {
                     if (starredCompetitions.has(comp.id) || comp.id === selectedCompetition?.id) return false;
@@ -156,9 +156,7 @@ export function CompetitionDropdown({
                 {/* Past Competitions Section */}
                 {renderCompetitionSection(
                   "Past Competitions",
-                  <div className="w-4 h-4 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full flex items-center justify-center">
-                    <TrophyIcon className="h-2.5 w-2.5 text-white" />
-                  </div>,
+                  <div />,
                   competitions.filter(comp => {
                     if (starredCompetitions.has(comp.id) || comp.id === selectedCompetition?.id) return false;
                     return getCompetitionStatus(comp) === 'past';

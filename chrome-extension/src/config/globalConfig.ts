@@ -31,7 +31,7 @@ class GlobalConfigService {
     backendUrl: 'https://kaggie-api.onrender.com', // Backend successfully deployed on Render.com
     model: 'gpt-4o-mini',
     temperature: 0.3,
-    openaiApiKey: '', // SECURITY: No hardcoded API keys - users must provide their own
+    openaiApiKey: '', 
     tavilyApiKey: '',
     currentThreadId: 'default',
     lastSelectedCompetition: null

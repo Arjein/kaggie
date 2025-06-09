@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Kaggie",
   "version": "1.0.0",
-  "description": "AI-powered Kaggle competition assistant that helps you understand datasets, implement solutions, and optimize your machine learning workflows.",
+  "description": "AI assistant for Kaggle competitions - analyze datasets, implement solutions, and optimize ML workflows.",
   
   "permissions": [
     "storage",

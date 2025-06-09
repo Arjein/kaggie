@@ -57,39 +57,22 @@ export default function PreparedMessages({ onSendMessage }: PreparedMessagesProp
 
   return (
     <motion.div 
-      className="flex flex-col items-center justify-center h-full text-center py-12 max-w-4xl mx-auto"
+      className="flex flex-col items-center justify-end h-full text-center pb-1 max-w-4xl mx-auto"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       {/* Header */}
-      <motion.div 
-        className="w-16 h-16 bg-bg-overlay rounded-full flex items-center justify-center mb-6"
-        initial={{ scale: 0, rotate: -180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ delay: 0.2, duration: 0.5, ease: "easeOut" }}
-      >
-        <svg className="w-8 h-8 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.681L3 21l2.681-5.094A8.959 8.959 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
-        </svg>
-      </motion.div>
+
       
       <motion.h3 
-        className="text-adaptive-lg font-medium text-text-primary mb-2"
+        className="text-adaptive-lg font-medium text-primary mb-12"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.4 }}
       >
         Ready to help with your competition
       </motion.h3>
-      <motion.p 
-        className="text-adaptive text-text-secondary/80 max-w-md mb-8"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.4 }}
-      >
-        Get started quickly with these common questions, or ask anything about your Kaggle competition.
-      </motion.p>
 
       {/* Prepared Messages Grid */}
       <motion.div 

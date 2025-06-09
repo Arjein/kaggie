@@ -152,16 +152,7 @@ export default function ChatArea({ messages, onSendMessage, selectedCompetition 
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, ease: "easeOut" }}
                             >
-                                <motion.div 
-                                    className="w-16 h-16 bg-bg-overlay rounded-full flex items-center justify-center mb-4"
-                                    initial={{ scale: 0, rotate: -180 }}
-                                    animate={{ scale: 1, rotate: 0 }}
-                                    transition={{ delay: 0.1, duration: 0.4, ease: "easeOut" }}
-                                >
-                                    <svg className="w-8 h-8 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.681L3 21l2.681-5.094A8.959 8.959 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
-                                    </svg>
-                                </motion.div>
+                            
                                 <motion.p 
                                     className="text-adaptive text-text-secondary/80 max-w-md"
                                     initial={{ opacity: 0, y: 10 }}
@@ -170,7 +161,7 @@ export default function ChatArea({ messages, onSendMessage, selectedCompetition 
                                 >
                                     {selectedCompetition 
                                         ? 'Ask me anything about your Kaggle competition - from data analysis to model building strategies.'
-                                        : 'Please select a competition to activate Kaggie!'
+                                        : ''
                                     }
                                 </motion.p>
                             </motion.div>
