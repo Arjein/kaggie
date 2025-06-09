@@ -281,9 +281,9 @@ export default function Navbar({
                 className="w-full flex items-center justify-between px-2 sm:px-3 py-4 bg-bg-overlay hover:bg-bg-secondary rounded-lg border border-border-subtle transition-colors duration-200"
                 disabled={loading}
               >
-                <div className="flex items-center space-x-1 sm:space-x-2 min-w-0 flex-1">
+                <div className="flex items-center justify-center space-x-1 sm:space-x-2 min-w-0 flex-1">
                   <TrophyIcon className="h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0 text-text-secondary" />
-                  <span className="text-xs sm:text-adaptive-sm font-medium text-text-primary truncate">
+                  <span className="text-xs sm:text-adaptive-sm font-medium text-text-primary truncate text-center">
                     {loading ? 'Loading...' : selectedCompetition ? selectedCompetition.title : 'Select Competition'}
                   </span>
                 </div>
