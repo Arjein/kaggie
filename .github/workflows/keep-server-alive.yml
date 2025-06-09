@@ -3,7 +3,6 @@ name: Keep Render Server Alive
 on:
   schedule:
     - cron: '*/5 * * * *'   # Every 5 minutes (we'll add randomness in the script)
-  workflow_dispatch:         # Allow manual trigger
 
 jobs:
   ping-server:

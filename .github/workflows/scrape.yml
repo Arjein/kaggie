@@ -3,7 +3,6 @@ name: Run Kaggle Scraper every 4 hours
 on:
   schedule:
     - cron: '0 */4 * * *'  # Every 4 hours
-  workflow_dispatch:       # Allow manual trigger
 
 jobs:
   scrape:
