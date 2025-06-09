@@ -19,12 +19,17 @@ except Exception as e:
 
 app = FastAPI(title="Kaggler API", version="1.0.0")
 print("CREDS PATH: ", os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"))
-# CORS middleware
+# CORS middleware - Security: Restrict origins in production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        # Chrome extension origins (for development and production)
+        "chrome-extension://*",
+        # Production frontend (add your domain)
+        # "https://your-frontend-domain.com",
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],  # Restrict to necessary methods
     allow_headers=["*"],
 )
 
