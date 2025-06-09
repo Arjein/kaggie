@@ -5,9 +5,10 @@ interface TextAreaProps {
   isLoading?: boolean;
   canSendMessage?: boolean; // Add this prop
   selectedCompetition?: { title: string } | null; // Add this prop
+  hasApiKeys?: boolean; // Add this prop to distinguish API key issues
 }
 
-export default function TextArea({ onSendMessage, isLoading, canSendMessage = true, selectedCompetition }: TextAreaProps) {
+export default function TextArea({ onSendMessage, isLoading, canSendMessage = true, selectedCompetition, hasApiKeys = true }: TextAreaProps) {
     const [input, setInput] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -43,7 +44,7 @@ export default function TextArea({ onSendMessage, isLoading, canSendMessage = tr
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (isLoading || !canSendMessage) return;
+        if (isLoading || !canSendMessage || !hasApiKeys) return;
         const trimmedInput = input.trim();
         if (!trimmedInput) return;
 
@@ -63,7 +64,7 @@ export default function TextArea({ onSendMessage, isLoading, canSendMessage = tr
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault(); 
-            if (isLoading || !canSendMessage) return;
+            if (isLoading || !canSendMessage || !hasApiKeys) return;
             const form = e.currentTarget.closest('form');
             if (form) {
                 form.requestSubmit();
@@ -72,8 +73,13 @@ export default function TextArea({ onSendMessage, isLoading, canSendMessage = tr
     };
 
     const getPlaceholder = () => {
+        // Check API keys first - highest priority
+        if (!hasApiKeys) {
+            return "Please set your OpenAI API key to get started";
+        }
+        // Then check if we can send messages (competition selected)
         if (!canSendMessage) {
-            return "Select a competition to start chatting...";
+            return "Please select a competition to start chatting";
         }
         if (selectedCompetition) {
             return `Ask about ${selectedCompetition.title}...`;
@@ -93,7 +99,7 @@ export default function TextArea({ onSendMessage, isLoading, canSendMessage = tr
                     placeholder={getPlaceholder()}
                     rows={1}
                     style={{ height: `${minHeight}px` }}
-                    disabled={!canSendMessage}
+                    disabled={!canSendMessage || !hasApiKeys}
                 />
                 <div className="flex justify-end items-center px-3 pb-2">
                     
@@ -101,7 +107,7 @@ export default function TextArea({ onSendMessage, isLoading, canSendMessage = tr
                         type="submit"
                         aria-label="Send message"
                         className="p-1 rounded-lg text-primary hover:bg-secondary/20 focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        disabled={isLoading || !input.trim() || !canSendMessage}
+                        disabled={isLoading || !input.trim() || !canSendMessage || !hasApiKeys}
                     >
                         {isLoading ? (
                             <svg className="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">

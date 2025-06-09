@@ -91,7 +91,7 @@ export function CompetitionItem({
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <p className={`text-xs xs:text-sm sm:text-base font-semibold truncate ${
+              <p className={`text-sm xs:text-xs sm:text-sm font-semibold truncate ${
                 isSelected ? 'text-primary' : 'text-text-primary'
               }`}>
                 {competition.title}

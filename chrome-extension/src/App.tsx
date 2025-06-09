@@ -79,8 +79,9 @@ function App() {
             <TextArea 
               onSendMessage={handleSendMessage} 
               isLoading={isWaitingForSystemResponse}
-              canSendMessage={canSendMessage && hasApiKeys}
+              canSendMessage={canSendMessage}
               selectedCompetition={selectedCompetition}
+              hasApiKeys={hasApiKeys}
             /> 
           </div>
         </div>

@@ -125,12 +125,7 @@ export function SettingsPanel({
                         <p className="text-text-primary font-medium">GPT-4o-mini</p>
                       </div>
                     </div>
-                    <div className="pt-4 border-t border-border-subtle">
-                      <span className="text-text-secondary">Backend URL:</span>
-                      <p className="text-text-primary font-medium text-xs bg-bg-overlay px-2 py-1 rounded mt-1">
-                        https://kaggie-api.onrender.com
-                      </p>
-                    </div>
+
                   </div>
                 </div>
 
@@ -179,34 +174,12 @@ export function SettingsPanel({
                         <span className="text-text-secondary">Extension Version:</span>
                         <p className="text-text-primary font-medium">1.0.0</p>
                       </div>
-                      <div>
-                        <span className="text-text-secondary">Build:</span>
-                        <p className="text-text-primary font-medium">Production</p>
-                      </div>
+                      
                     </div>
                     <p className="text-text-secondary">
                       Kaggie is your intelligent assistant for Kaggle competitions. Get insights, ask questions, 
                       and explore datasets with the power of AI.
                     </p>
-                    <div className="flex gap-3 pt-2">
-                      <a
-                        href="https://github.com/arjein/kaggie"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:text-primary-hover text-xs"
-                      >
-                        GitHub Repository
-                      </a>
-                      <span className="text-text-muted">•</span>
-                      <a
-                        href="https://github.com/arjein/kaggie#readme"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:text-primary-hover text-xs"
-                      >
-                        Documentation
-                      </a>
-                    </div>
                   </div>
                 </div>
               </div>

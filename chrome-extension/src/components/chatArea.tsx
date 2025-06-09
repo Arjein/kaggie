@@ -162,14 +162,6 @@ export default function ChatArea({ messages, onSendMessage, selectedCompetition 
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.681L3 21l2.681-5.094A8.959 8.959 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
                                     </svg>
                                 </motion.div>
-                                <motion.h3 
-                                    className="text-adaptive-lg font-medium text-text-primary mb-2"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.2, duration: 0.4 }}
-                                >
-                                    {selectedCompetition ? 'Ready to help with your competition' : 'Welcome to Kaggie!'}
-                                </motion.h3>
                                 <motion.p 
                                     className="text-adaptive text-text-secondary/80 max-w-md"
                                     initial={{ opacity: 0, y: 10 }}
