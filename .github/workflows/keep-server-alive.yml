@@ -2,7 +2,7 @@ name: Keep Render Server Alive
 
 on:
   schedule:
-    - cron: '*/5 * * * *'   # Every 5 minutes (we'll add randomness in the script)
+    - cron: '*/10 * * * *'   # Every 5 minutes (we'll add randomness in the script)
 
 jobs:
   ping-server:

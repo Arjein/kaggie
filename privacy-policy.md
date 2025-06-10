@@ -42,7 +42,7 @@ You can:
 - Control which API services to use
 
 ## Contact
-For questions about this privacy policy, please contact: [mertarcan8@gmail.com]
+For questions about this privacy policy, please contact: mertarcan8@gmail.com
 
 ## Changes
 We may update this policy occasionally. Check this page for the latest version.
