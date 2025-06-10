@@ -222,18 +222,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.runtime.onInstalled.addListener(async () => {
   console.log('Service Worker: Extension installed');
   
-  chrome.contextMenus.create({
-    id: "clearHistory",
-    title: "Clear Kaggler History",
-    contexts: ["all"]
-  });
-  
-  chrome.contextMenus.create({
-    id: "openSettings",
-    title: "Kaggler Settings",
-    contexts: ["all"]
-  });
-  
   // Check current tab on installation - FIXED VERSION
   try {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -251,15 +239,5 @@ chrome.runtime.onInstalled.addListener(async () => {
     }
   } catch (error) {
     console.error('Service Worker: Error during initial tab check:', error);
-  }
-});
-
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  console.log('Service Worker: Context menu clicked:', info.menuItemId);
-  
-  if (info.menuItemId === "clearHistory") {
-    chrome.storage.local.clear();
-  } else if (info.menuItemId === "openSettings") {
-    chrome.runtime.openOptionsPage();
   }
 });

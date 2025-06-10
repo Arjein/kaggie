@@ -77,6 +77,11 @@ To use Kaggie, you'll need to provide your own API keys:
 - Get your API key from the dashboard
 - Enter it in Kaggie's settings for enhanced web search capabilities
 
+### 🔧 Backend Configuration
+The extension connects to a backend service for enhanced features:
+- **Default Backend**: Pre-configured and ready to use
+- **Self-Hosting**: Advanced users can deploy their own backend using the provided code
+
 ### Getting Started
 1. **Install** the extension from Chrome Web Store (coming soon!)
 2. **Configure** your API keys in the extension settings
@@ -189,7 +194,7 @@ Interested in the technical implementation? Kaggie showcases modern development 
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/kaggie.git
+git clone https://github.com/arjein/kaggie.git
 cd kaggie
 
 # Install dependencies
@@ -249,7 +254,7 @@ Love Kaggie? Help others discover it:
 ## 📜 License & Legal
 
 ### 📄 **Open Source**
-Kaggie is open source under the MIT License. View the full license and contribute on [GitHub](https://github.com/yourusername/kaggie).
+Kaggie is open source under the MIT License. View the full license and contribute on [GitHub](https://github.com/arjein/kaggie).
 
 ### 🔒 **Privacy Policy**
 - No personal data collection
@@ -272,7 +277,7 @@ Kaggie is open source under the MIT License. View the full license and contribut
   <a href="https://chrome.google.com/webstore/" target="_blank">
     <img src="https://img.shields.io/badge/Chrome-Web%20Store-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Chrome Web Store">
   </a>
-  <a href="https://github.com/yourusername/kaggie" target="_blank">
+  <a href="https://github.com/arjein/kaggie" target="_blank">
     <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
   </a>
   

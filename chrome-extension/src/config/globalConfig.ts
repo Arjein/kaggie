@@ -28,7 +28,7 @@ class GlobalConfigService {
 
   // Default configuration values
   private readonly defaultConfig: GlobalConfig = {
-    backendUrl: 'https://kaggie-api.onrender.com', // Backend successfully deployed on Render.com
+    backendUrl: 'https://your-kaggie-backend.com', // Replace with your backend URL
     model: 'gpt-4o-mini',
     temperature: 0.3,
     openaiApiKey: '', 
