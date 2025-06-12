@@ -271,7 +271,7 @@ export class KaggieAgentService {
       // Use the provided thread ID instead of generating a new one
       const competitionThreadId = threadId;
       
-      onStatusUpdate('Processing query...');
+      onStatusUpdate('Thinking...');
       const response = await this.processQuery(
         text,
         selectedCompetition?.id,
