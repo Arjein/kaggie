@@ -5,9 +5,9 @@
   
   **Your intelligent companion for Kaggle competitions**
   
-  [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chrome.google.com/webstore/)
+  [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/kaggie/ndaeodljoghdfjainfdbnedoilfacmpa)
   [![AI Powered](https://img.shields.io/badge/AI-Powered-00D4AA?style=for-the-badge&logo=openai&logoColor=white)](#features)
-  [![Available Soon](https://img.shields.io/badge/Coming%20Soon-Chrome%20Web%20Store-FFA500?style=for-the-badge&logo=google-chrome&logoColor=white)](#installation)
+  [![Available Now](https://img.shields.io/badge/Available%20Now-Chrome%20Web%20Store-4CAF50?style=for-the-badge&logo=google-chrome&logoColor=white)](https://chromewebstore.google.com/detail/kaggie/ndaeodljoghdfjainfdbnedoilfacmpa)
 </div>
 
 ## ✨ What is Kaggie?
@@ -41,11 +41,13 @@ Kaggie is your personal AI assistant for dominating Kaggle competitions. Get ins
 
 ## 📥 Installation
 
-### Option 1: Chrome Web Store (Recommended - Coming Soon!)
-🚧 **Kaggie will be available on the Chrome Web Store soon!** 🚧
+### Option 1: Chrome Web Store (Recommended)
+🎉 **Kaggie is now available on the Chrome Web Store!** 🎉
 
-Once published, simply:
-1. Visit the Chrome Web Store
+**[📦 Install Kaggie from Chrome Web Store](https://chromewebstore.google.com/detail/kaggie/ndaeodljoghdfjainfdbnedoilfacmpa)**
+
+Simply:
+1. Click the link above or visit the Chrome Web Store
 2. Search for "Kaggie" 
 3. Click "Add to Chrome"
 4. Configure your API keys in the extension settings
@@ -83,7 +85,7 @@ The extension connects to a backend service for enhanced features:
 - **Self-Hosting**: Advanced users can deploy their own backend using the provided code
 
 ### Getting Started
-1. **Install** the extension from Chrome Web Store (coming soon!)
+1. **Install** the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/kaggie/ndaeodljoghdfjainfdbnedoilfacmpa)
 2. **Configure** your API keys in the extension settings
 3. **Navigate** to any Kaggle competition page
 4. **Open** Kaggie from the Chrome toolbar or side panel
@@ -274,7 +276,7 @@ Kaggie is open source under the MIT License. View the full license and contribut
   
   <br><br>
   
-  <a href="https://chrome.google.com/webstore/" target="_blank">
+  <a href="https://chromewebstore.google.com/detail/kaggie/ndaeodljoghdfjainfdbnedoilfacmpa" target="_blank">
     <img src="https://img.shields.io/badge/Chrome-Web%20Store-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Chrome Web Store">
   </a>
   <a href="https://github.com/arjein/kaggie" target="_blank">
